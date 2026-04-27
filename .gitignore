@@ -1,0 +1,37 @@
+# Experiment outputs
+experiments/Results/
+results/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*~
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+
+# Environment
+.env
+venv/
+.venv/
+
+# Demo runtime
+demo/server_code/flask_code/User_Study_Data/
+demo/server_code/flask_code/errorlog.txt
+demo/server_code/flask_code/__pycache__/
+
+# Claude Code local config
+.claude/

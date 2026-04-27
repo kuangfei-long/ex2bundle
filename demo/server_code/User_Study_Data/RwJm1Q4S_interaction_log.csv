@@ -1,0 +1,158 @@
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:33 GMT,json_example,{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:41 GMT,json_example,{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,W
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WE
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WEA
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WEAT
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WEATHE
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:48 GMT,searched_keyword,WEATHE
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:48 GMT,searched_keyword,WEATHER
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:50 GMT,json_example,{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:55 GMT,json_learn_summary,[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]},{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]},{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:01 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.0202,0.4139],[0.0413,1.1476],[0.0253,2.8135],[0.0518,0.9159],[0.3854,0.5846],[0.0381,0.7528],[0.1286,0.6211],[0.03,1.9896],[0.0415,1.4859],[0.1078,0.6991]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]},{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]},{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}],"summary_indicies":[5482,5484,5547,5626,5637,5639,5977],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:11 GMT,json_generate_summary,{"modified_bounds":1,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.0202,0.4139],[0.0413,1.1476],[0,2.37265],[0.0518,0.9159],[0.3854,0.5846],[0.0381,0.7528],[0.1286,0.6211],[0.03,1.9896],[0.0415,1.4859],[0.1078,0.6991]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]},{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]},{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}],"summary_indicies":[5482,5484,5547,5626,5637,5639,5977],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:45 GMT,json_example,{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:54 GMT,json_example,{"state_id":43,"state_name":"utah","sentence_ids":[19305,19306,19307,19308,19309,19310,19311]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:56 GMT,json_learn_summary,[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441]},{"state_id":43,"state_name":"utah","sentence_ids":[19305,19306,19307,19308,19309,19310,19311]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:58 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"11","state_name":"learnedSummary11","bounds":[[0.2194,0.2826],[0.5196,0.8805],[1.3733,2.3106],[0.1515,0.2927],[0.1442,0.4016],[0.1306,0.2664],[0.1705,0.3983],[0.392,0.8323],[0.2343,1.5463],[0.2519,0.5039]],"examples":[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441]},{"state_id":43,"state_name":"utah","sentence_ids":[19305,19306,19307,19308,19309,19310,19311]}],"summary_indicies":[5191,5193,5202,5222,5260],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:33 GMT,json_example,{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:41 GMT,json_example,{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,W
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WE
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WEA
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WEAT
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:47 GMT,searched_keyword,WEATHE
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:48 GMT,searched_keyword,WEATHE
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:48 GMT,searched_keyword,WEATHER
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:50 GMT,json_example,{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:22:55 GMT,json_learn_summary,[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]},{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]},{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:01 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.0202,0.4139],[0.0413,1.1476],[0.0253,2.8135],[0.0518,0.9159],[0.3854,0.5846],[0.0381,0.7528],[0.1286,0.6211],[0.03,1.9896],[0.0415,1.4859],[0.1078,0.6991]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]},{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]},{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}],"summary_indicies":[5482,5484,5547,5626,5637,5639,5977],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:11 GMT,json_generate_summary,{"modified_bounds":1,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.0202,0.4139],[0.0413,1.1476],[0,2.37265],[0.0518,0.9159],[0.3854,0.5846],[0.0381,0.7528],[0.1286,0.6211],[0.03,1.9896],[0.0415,1.4859],[0.1078,0.6991]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1000,1001,1002,1003,1004]},{"state_id":11,"state_name":"idaho","sentence_ids":[5190,5191,5192,5193,5194,5195,5196,5197,5198,5199]},{"state_id":13,"state_name":"indiana","sentence_ids":[6166]}],"summary_indicies":[5482,5484,5547,5626,5637,5639,5977],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:45 GMT,json_example,{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:54 GMT,json_example,{"state_id":43,"state_name":"utah","sentence_ids":[19305,19306,19307,19308,19309,19310,19311]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:56 GMT,json_learn_summary,[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441]},{"state_id":43,"state_name":"utah","sentence_ids":[19305,19306,19307,19308,19309,19310,19311]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:23:58 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"11","state_name":"learnedSummary11","bounds":[[0.2194,0.2826],[0.5196,0.8805],[1.3733,2.3106],[0.1515,0.2927],[0.1442,0.4016],[0.1306,0.2664],[0.1705,0.3983],[0.392,0.8323],[0.2343,1.5463],[0.2519,0.5039]],"examples":[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441]},{"state_id":43,"state_name":"utah","sentence_ids":[19305,19306,19307,19308,19309,19310,19311]}],"summary_indicies":[5191,5193,5202,5222,5260],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:25:24 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 01:30:12 GMT,json_example,{"state_id":8,"state_name":"florida","sentence_ids":[3644,3645,3646,3647,3648,3649,3650,3651,3652,3653,3654,3655,3656]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:35:28 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 01:35:41 GMT,json_example,{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,526,527]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:35:49 GMT,json_example,{"state_id":48,"state_name":"wisconsin","sentence_ids":[21971,21972,21973,21974,21975,21976,21978,21980]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:35:51 GMT,json_learn_summary,[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,526,527]},{"state_id":48,"state_name":"wisconsin","sentence_ids":[21971,21972,21973,21974,21975,21976,21978,21980]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:35:54 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"10","state_name":"learnedSummary10","bounds":[[0.1991,0.4365],[0.7373,1.0098],[1.427,2.3856],[0.1943,0.5091],[0.2513,0.5255],[0.1676,0.5232],[0.287,0.6004],[0.6838,0.9519],[0.9555,2.2242],[0.4371,0.807]],"examples":[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,526,527]},{"state_id":48,"state_name":"wisconsin","sentence_ids":[21971,21972,21973,21974,21975,21976,21978,21980]}],"summary_indicies":[4645,4647,4648,4650,4682,4683,4688,5010],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:40:57 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:22 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:38 GMT,json_example,{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:43 GMT,json_example,{"state_id":18,"state_name":"maine","sentence_ids":[8467,8469,8470,8471,8472]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:45 GMT,json_example_delete,{"state_id":18,"state_name":"maine","sentence_ids":["sent19008467","sent19008469","sent19008470","sent19008471","sent19008472"]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:49 GMT,json_example,{"state_id":18,"state_name":"maine","sentence_ids":[8467,8469,8475,8476,8477]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:50 GMT,json_learn_summary,[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8469,8475,8476,8477]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:41:52 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.1598,0.2971],[0.316,0.8487],[0.9275,1.4898],[0.1376,0.3906],[0.1671,0.4678],[0.1528,0.3358],[0.208,0.4303],[1.6602,2.2521],[0.3787,3.0274],[0.2092,0.584]],"examples":[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8469,8475,8476,8477]}],"summary_indicies":[5486,5491,5547,5605,5637,5652,5696],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:03 GMT,display_wordcloud,displaying wordcloud for topic id: 2
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:04 GMT,display_barchart,displaying barchart for topic id: 2
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:07 GMT,display_topic_keywords,displaying wordcloud for document id: 5, and label: topics5
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:24 GMT,display_topic_keywords,displaying wordcloud for document id: 48, and label: topics48
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:31 GMT,display_topic_keywords,displaying wordcloud for document id: -1, and label: topics-1
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:33 GMT,display_wordcloud,displaying wordcloud for topic id: 2
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:34 GMT,display_barchart,displaying barchart for topic id: 2
+RwJm1Q4S,Mon, 20 Sep 2021 01:42:51 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:50 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:54 GMT,searched_keyword,E
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:54 GMT,searched_keyword,EC
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:55 GMT,searched_keyword,ECO
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:55 GMT,searched_keyword,ECON
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:56 GMT,searched_keyword,ECONO
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:56 GMT,searched_keyword,ECONOM
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:56 GMT,searched_keyword,ECONOMUY
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:56 GMT,searched_keyword,ECONOMUY
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:58 GMT,searched_keyword,ECONOMU
+RwJm1Q4S,Mon, 20 Sep 2021 01:45:58 GMT,searched_keyword,ECONOM
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:00 GMT,searched_keyword,ECONOMY
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:08 GMT,json_example,{"state_id":4,"state_name":"california","sentence_ids":[1880,1881,1882,1887,1888,1895,1896,2012,2015,2248,2256,2261,2265,2267]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:16 GMT,json_example,{"state_id":12,"state_name":"illinois","sentence_ids":[5482,5483,5484,5485,5486,5487,5488,5489,5490,5491]}
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:18 GMT,json_learn_summary,[{"state_id":4,"state_name":"california","sentence_ids":[1880,1881,1882,1887,1888,1895,1896,2012,2015,2248,2256,2261,2265,2267]},{"state_id":12,"state_name":"illinois","sentence_ids":[5482,5483,5484,5485,5486,5487,5488,5489,5490,5491]}]
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:21 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"10","state_name":"learnedSummary10","bounds":[[0.2534,0.4723],[0.669,1.4441],[0.5003,1.7005],[0.3359,1.1866],[0.639,0.9443],[0.3364,0.5919],[0.4086,0.9846],[0.4923,1.0318],[1.8713,2.3282],[1.5396,7.1041]],"examples":[{"state_id":4,"state_name":"california","sentence_ids":[1880,1881,1882,1887,1888,1895,1896,2012,2015,2248,2256,2261,2265,2267]},{"state_id":12,"state_name":"illinois","sentence_ids":[5482,5483,5484,5485,5486,5487,5488,5489,5490,5491]}],"summary_indicies":[4645,4650,4651,4682,4685,4863,4948,4973,5138,5177],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:23 GMT,display_focused_topic_view,opening focused view accordian for topic: 0
+RwJm1Q4S,Mon, 20 Sep 2021 01:46:26 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Mon, 20 Sep 2021 03:35:50 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 03:36:20 GMT,json_example,{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1001,1002,1003,1004,1005]}
+RwJm1Q4S,Mon, 20 Sep 2021 03:36:27 GMT,json_example,{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6884,6886,6887,6889,6891,6892,6894]}
+RwJm1Q4S,Mon, 20 Sep 2021 03:36:28 GMT,json_learn_summary,[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1001,1002,1003,1004,1005]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6884,6886,6887,6889,6891,6892,6894]}]
+RwJm1Q4S,Mon, 20 Sep 2021 03:36:34 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"11","state_name":"learnedSummary11","bounds":[[0.4688,0.5972],[0.5447,0.9546],[1.2504,1.6983],[0.4017,0.5067],[0.3959,0.5227],[0.622,0.8154],[0.3651,0.4593],[1.7086,2.5981],[0.3207,0.9496],[0.4172,0.5596]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1001,1002,1003,1004,1005]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6884,6886,6887,6889,6891,6892,6894]}],"summary_indicies":[5193,5196,5221,5222,5260,5267,5308,5422],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 03:36:40 GMT,json_generate_summary,{"modified_bounds":1,"state_id":"11","state_name":"learnedSummary11","bounds":[[0.4688,0.5972],[1.1552060000000002,1.9015520000000001],[1.2504,1.6983],[0.4017,0.5067],[0.3959,0.5227],[0.622,0.8154],[0.3651,0.4593],[0.7578959999999999,1.559913],[1.3892440000000001,2.024248],[0.4172,0.5596]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,999,1001,1002,1003,1004,1005]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6884,6886,6887,6889,6891,6892,6894]}],"summary_indicies":[5191,5193,5198,5202,5260,5288,5303,5371],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:09 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:17 GMT,json_example,{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,1001]}
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:24 GMT,json_example,{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789]}
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:26 GMT,json_learn_summary,[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,1001]},{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789]}]
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:31 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.1574,0.8089],[0.2082,0.4574],[1.1134,1.4964],[0.1748,0.283],[0.1586,0.4448],[0.1275,0.4179],[0.1342,0.496],[0.3101,0.9954],[0.1733,1.9433],[0.1415,0.358]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,1001]},{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789]}],"summary_indicies":[5484,5547,5626,5637,5650],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:33 GMT,display_focused_topic_view,opening focused view accordian for topic: 3
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:35 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:37 GMT,display_topic_keywords,displaying wordcloud for document id: 1, and label: topics1
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:38 GMT,display_focused_topic_view,opening focused view accordian for topic: 1
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:39 GMT,display_wordcloud,displaying wordcloud for topic id: 1
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:40 GMT,display_barchart,displaying barchart for topic id: 1
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:46 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:48 GMT,display_topic_keywords,displaying wordcloud for document id: -1, and label: topics-1
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:50 GMT,display_focused_topic_view,opening focused view accordian for topic: 5
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:51 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:52 GMT,display_focused_topic_view,opening focused view accordian for topic: 5
+RwJm1Q4S,Mon, 20 Sep 2021 03:37:53 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"12","state_name":"learnedSummary12","bounds":[[0.1574,0.8089],[0.2082,0.4574],[1.1134,1.4964],[0.1748,0.283],[0.1586,0.4448],[0.1275,0.4179],[0.1342,0.496],[0.3101,0.9954],[0.1733,1.9433],[0.1415,0.358]],"examples":[{"state_id":2,"state_name":"arizona","sentence_ids":[997,998,1001]},{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789]}],"summary_indicies":[5484,5547,5626,5637,5650],"default_summ":false}
+RwJm1Q4S,Mon, 20 Sep 2021 13:32:19 GMT,reload_page,reloaded page
+RwJm1Q4S,Mon, 20 Sep 2021 13:33:58 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:19:53 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:23:18 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:23:52 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:27:07 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:18 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:31 GMT,json_example,{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,525,526,527,528,529]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:44 GMT,json_example,{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6883,6884,6885,6886,6887,6888,6889,6890,6891,6892]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:45 GMT,json_learn_summary,[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,525,526,527,528,529]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6883,6884,6885,6886,6887,6888,6889,6890,6891,6892]}]
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:48 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"15","state_name":"learnedSummary15","bounds":[[0.3034,0.7494],[0.9176,1.3465],[1.6126,2.1504],[0.2992,0.6269],[0.3855,0.5952],[0.3093,0.7816],[0.4935,0.6489],[1.555,3.494],[0.9285,2.7918],[0.6527,0.8009]],"examples":[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,525,526,527,528,529]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6883,6884,6885,6886,6887,6888,6889,6890,6891,6892]}],"summary_indicies":[6884,6885,6887,6889,6892,6896,6904,6913,6927,7024,7156,7165],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:50 GMT,display_focused_topic_view,opening focused view accordian for topic: 0
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:51 GMT,display_wordcloud,displaying wordcloud for topic id: 0
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:52 GMT,display_barchart,displaying barchart for topic id: 0
+RwJm1Q4S,Sun, 26 Sep 2021 17:32:53 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Sun, 26 Sep 2021 17:33:08 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"15","state_name":"learnedSummary15","bounds":[[0.3034,0.7494],[0.9176,1.3465],[1.6126,2.1504],[0.2992,0.6269],[0.3855,0.5952],[0.3093,0.7816],[0.4935,0.6489],[1.555,3.494],[0.9285,2.7918],[0.6527,0.8009]],"examples":[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,525,526,527,528,529]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6883,6884,6885,6886,6887,6888,6889,6890,6891,6892]}],"summary_indicies":[6884,6885,6887,6889,6892,6896,6904,6913,6927,7024,7156,7165],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:33:21 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"15","state_name":"learnedSummary15","bounds":[[0.3034,0.7494],[0.9176,1.3465],[1.6126,2.1504],[0.2992,0.6269],[0.3855,0.5952],[0.3093,0.7816],[0.4935,0.6489],[1.555,3.494],[0.9285,2.7918],[0.6527,0.8009]],"examples":[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,525,526,527,528,529]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6883,6884,6885,6886,6887,6888,6889,6890,6891,6892]}],"summary_indicies":[6884,6885,6887,6889,6892,6896,6904,6913,6927,7024,7156,7165],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:35:18 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"15","state_name":"learnedSummary15","bounds":[[0.3034,0.7494],[0.9176,1.3465],[1.6126,2.1504],[0.2992,0.6269],[0.3855,0.5952],[0.3093,0.7816],[0.4935,0.6489],[1.555,3.494],[0.9285,2.7918],[0.6527,0.8009]],"examples":[{"state_id":1,"state_name":"alaska","sentence_ids":[520,521,522,523,524,525,526,527,528,529]},{"state_id":15,"state_name":"kansas","sentence_ids":[6882,6883,6884,6885,6886,6887,6888,6889,6890,6891,6892]}],"summary_indicies":[6884,6885,6887,6889,6892,6896,6904,6913,6927,7024,7156,7165],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:37:51 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:38:35 GMT,json_example,{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:38:44 GMT,json_example,{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:38:45 GMT,json_learn_summary,[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473]}]
+RwJm1Q4S,Sun, 26 Sep 2021 17:38:48 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"17","state_name":"learnedSummary17","bounds":[[0.2429,0.4149],[0.4976,0.8487],[1.2187,2.1925],[0.3121,0.3906],[0.3825,0.5265],[0.2642,0.3358],[0.3519,0.5067],[0.633,2.0294],[1.1002,3.0274],[0.4777,0.6285]],"examples":[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473]}],"summary_indicies":[7831,7832,7833,7836,7900,7954,8096,8225],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:39:02 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"17","state_name":"learnedSummary17","bounds":[[0.2429,0.4149],[0.4976,0.8487],[1.2187,2.1925],[0.3121,0.3906],[0.3825,0.5265],[0.2642,0.3358],[0.3519,0.5067],[0.633,2.0294],[1.1002,3.0274],[0.4777,0.6285]],"examples":[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473]}],"summary_indicies":[7831,7832,7833,7836,7900,7954,8096,8225],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:39:58 GMT,json_learn_summary,[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341,3342]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473]}]
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:01 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:08 GMT,json_example,{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:15 GMT,json_example,{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473,8474]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:16 GMT,json_learn_summary,[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473,8474]}]
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:20 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"16","state_name":"learnedSummary16","bounds":[[0.221,0.5134],[0.5787,0.8179],[1.1787,2.2416],[0.2965,0.4202],[0.3581,0.5886],[0.2438,0.3779],[0.3091,0.535],[0.9817,1.3881],[1.1456,2.9987],[0.4243,0.7059]],"examples":[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473,8474]}],"summary_indicies":[7332,7334,7339,7350,7365,7411,7665,7689,7708],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:25 GMT,display_focused_topic_view,opening focused view accordian for topic: 0
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:29 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"16","state_name":"learnedSummary16","bounds":[[0.221,0.5134],[0.5787,0.8179],[1.1787,2.2416],[0.2965,0.4202],[0.3581,0.5886],[0.2438,0.3779],[0.3091,0.535],[0.9817,1.3881],[1.1456,2.9987],[0.4243,0.7059]],"examples":[{"state_id":7,"state_name":"delaware","sentence_ids":[3334,3335,3336,3337,3338,3339,3340,3341]},{"state_id":18,"state_name":"maine","sentence_ids":[8467,8468,8469,8470,8471,8472,8473,8474]}],"summary_indicies":[7332,7334,7339,7350,7365,7411,7665,7689,7708],"default_summ":false}
+RwJm1Q4S,Sun, 26 Sep 2021 17:42:32 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Sun, 26 Sep 2021 17:44:17 GMT,reload_page,reloaded page
+RwJm1Q4S,Sun, 26 Sep 2021 17:49:29 GMT,json_example,{"state_id":4,"state_name":"california","sentence_ids":[1880,1881,1882,1883,1884]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:49:37 GMT,json_example,{"state_id":14,"state_name":"iowa","sentence_ids":[6468,6469,6470,6471,6472,6473,6474,6475]}
+RwJm1Q4S,Sun, 26 Sep 2021 17:49:38 GMT,json_learn_summary,[{"state_id":4,"state_name":"california","sentence_ids":[1880,1881,1882,1883,1884]},{"state_id":14,"state_name":"iowa","sentence_ids":[6468,6469,6470,6471,6472,6473,6474,6475]}]
+RwJm1Q4S,Sun, 26 Sep 2021 17:49:40 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"18","state_name":"learnedSummary18","bounds":[[0.0742,0.1978],[0.333,0.7229],[0.2173,2.241],[0.1416,0.2909],[0.1249,0.2471],[0.1265,0.2554],[0.2264,0.3138],[0.2323,1.127],[1.3038,3.0383],[0.2789,2.1271]],"examples":[{"state_id":4,"state_name":"california","sentence_ids":[1880,1881,1882,1883,1884]},{"state_id":14,"state_name":"iowa","sentence_ids":[6468,6469,6470,6471,6472,6473,6474,6475]}],"summary_indicies":[8467,8469,8549,8561,8564],"default_summ":false}
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:22 GMT,reload_page,reloaded page
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:34 GMT,json_example,{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441,1442,1443]}
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:42 GMT,json_example,{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789,8790]}
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:43 GMT,json_learn_summary,[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441,1442,1443]},{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789,8790]}]
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:51 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"15","state_name":"learnedSummary15","bounds":[[0.2938,0.831],[0.5035,0.9452],[1.2797,1.7711],[0.2429,0.3387],[0.288,0.4737],[0.215,0.449],[0.3242,0.5186],[0.4671,1.6919],[0.9388,1.9749],[0.3148,0.4562]],"examples":[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441,1442,1443]},{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789,8790]}],"summary_indicies":[6882,6887,6904,6927,6945,6984,7019,7024],"default_summ":false}
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:52 GMT,display_focused_topic_view,opening focused view accordian for topic: 0
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:55 GMT,display_topic_keywords,displaying wordcloud for document id: 6, and label: topics6
+RwJm1Q4S,Tue, 02 Nov 2021 20:14:58 GMT,display_topic_keywords,displaying wordcloud for document id: 9, and label: topics9
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:02 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:04 GMT,display_topic_keywords,displaying wordcloud for document id: 17, and label: topics17
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:06 GMT,display_topic_keywords,displaying wordcloud for document id: 6, and label: topics6
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:08 GMT,display_focused_topic_view,opening focused view accordian for topic: 1
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:10 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:14 GMT,display_focused_topic_view,opening focused view accordian for topic: 0
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:15 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:16 GMT,display_topic_keywords,displaying wordcloud for document id: 16, and label: topics16
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:19 GMT,display_focused_topic_view,opening focused view accordian for topic: 8
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:21 GMT,display_topic_keywords,displaying wordcloud for document id: -1, and label: topics-1
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:23 GMT,display_wordcloud,displaying wordcloud for topic id: 8
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:25 GMT,display_topic_keywords,displaying wordcloud for document id: 4, and label: topics4
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:27 GMT,close_topic_accordian,closed topic accordian
+RwJm1Q4S,Tue, 02 Nov 2021 20:15:35 GMT,json_generate_summary,{"modified_bounds":0,"state_id":"15","state_name":"learnedSummary15","bounds":[[0.2938,0.831],[0.5035,0.9452],[1.2797,1.7711],[0.2429,0.3387],[0.288,0.4737],[0.215,0.449],[0.3242,0.5186],[0.4671,1.6919],[0.9388,1.9749],[0.3148,0.4562]],"examples":[{"state_id":3,"state_name":"arkansas","sentence_ids":[1438,1439,1440,1441,1442,1443]},{"state_id":19,"state_name":"maryland","sentence_ids":[8783,8784,8785,8786,8787,8788,8789,8790]}],"summary_indicies":[6882,6887,6904,6927,6945,6984,7019,7024],"default_summ":false}

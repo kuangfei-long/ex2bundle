@@ -1,0 +1,444 @@
+[
+  {
+    "id": 0,
+    "name": "CNNDM_roberta_0",
+    "original_text": [
+      "turkey has blocked access to twitter and youtube after they refused a request to remove pictures of a prosecutor held during an armed siege last week .",
+      "a turkish court imposed the blocks because images of the deadly siege were being shared on social media and ` deeply upset ' the wife and children of mehmet selim kiraz , the hostage who was killed .",
+      "the 46-year-old turkish prosecutor died in hospital when members of the revolutionary people 's liberation party-front ( dhkp-c ) stormed a courthouse and took him hostage .",
+      "the dhkp-c is considered a terrorist group by turkey , the european union and us .",
+      "a turkish court has blocked access to twitter and youtube after they refused a request to remove pictures of prosecutor mehmet selim kiraz held during an armed siege last week",
+      "grief : the family of mehmet selim kiraz grieve over his coffin during his funeral at eyup sultan mosque in istanbul , turkey .",
+      "he died in hospital after he was taken hostage by the far-left organisation",
+      "two of his captors were killed when security forces took back the building where the far-left group was holding him .",
+      "gunshots were heard and smoke could be seen rising from the scene at the end of the six-hour stand-off .",
+      "mr kiraz , a father-of-two married to a judge who also worked at the courthouse , was targeted for his part in an investigation into the death of berkin elvan .",
+      "the 15-year-old was severely wounded after being hit on the head by a tear-gas canister fired by a police officer during anti-government protests in istanbul in june 2013 .",
+      "after spending 269 days in a coma , elvan eventually died on march 11 last year .",
+      "his death , and the subsequent investigation , have since become a rallying point for the country 's far-left .",
+      "gathering : prosecutors , lawyers and judges stand near a statue of lady justice during the funeral ceremony",
+      "a british national , of polish origin but who has not been named , was arrested on saturday as part of an operation against the revolutionary people 's liberation party-front , according to reports .",
+      "a foreign office spokeswoman said this morning : ' i can confirm that a british national has been arrested in turkey and that we are offering consular assistance . '",
+      "before imposing the blocks on the websites , turkish authorities had tried to prevent newspapers printing images taken during the siege last week .",
+      "the newspapers were accused by the government of ` spreading terrorist propaganda ' in sharing the images of the hostage-taking .",
+      "presidential spokesman ibrahim kalin said : ` this has to do with the publishing of the prosecutor 's",
+      "what happened in the aftermath ( of the prosecutor 's",
+      "killing ) is as grim as the incident itself .",
+      "` the demand from the prosecutor 's office is that this image",
+      "not be used anywhere in electronic platforms .",
+      "` the wife and children of prosecutor kiraz have been deeply",
+      "the images are everywhere . '",
+      "he added : ' a request has been made to both twitter and youtube for the",
+      "removal of the images and posts but they have not accepted it",
+      "and no response has been given .",
+      "this decision has been taken through a court in istanbul . '",
+      "critical : prosecutor mehmet selim kiraz was taken to hospital with gunshot wounds but died of his injuries",
+      "strength of feeling : elvan has since become an icon for the turkish far-left and his supporters accuse the authorities of covering up the circumstances and perpetrators of his death",
+      "google said it was working to restore service to the youtube",
+      "video-sharing site , which it owns .",
+      "working to restore access for its users .",
+      "facebook said it had complied with a turkish court order requiring it to restrict access to some content or face a block on its service .",
+      "a company spokesman said it would appeal the order .",
+      "turkey 's telecoms regulator could not immediately be reached",
+      "and there was no statement on its website .",
+      "this is not the first time that turkish authorities have imposed blocks on social media sites and networks .",
+      "in the run-up to local elections in march 2014 blocks were imposed after recordings circulated allegedly revealing corruption among senior officials .",
+      "figures provided by twitter revealed that turkey filed more requests to remove content from the social network than any other nation between july and december 2014 ."
+    ],
+    "original_summary": [
+      "turkish court imposed blocks as images of siege shared on social media .",
+      "images ` deeply upset ' wife and children of hostage mehmet selim kiraz .",
+      "prosecutor , 46 , died in hospital after hostages stormed a courthouse .",
+      "two of his captors were killed when security forces took back the building ."
+    ],
+    "GPT_topic": "politic",
+    "GPT_raw_json": [
+      {
+        "sentenceNumber": 0,
+        "sentenceText": "turkey has blocked access to twitter and youtube after they refused a request to remove pictures of a prosecutor held during an armed siege last week."
+      },
+      {
+        "sentenceNumber": 1,
+        "sentenceText": "a turkish court imposed the blocks because images of the deadly siege were being shared on social media and ` deeply upset ' the wife and children of mehmet selim kiraz, the hostage who was killed."
+      },
+      {
+        "sentenceNumber": 2,
+        "sentenceText": "the 46-year-old turkish prosecutor died in hospital when members of the revolutionary people 's liberation party-front ( dhkp-c ) stormed a courthouse and took him hostage."
+      },
+      {
+        "sentenceNumber": 3,
+        "sentenceText": "the dhkp-c is considered a terrorist group by turkey, the european union and us."
+      },
+      {
+        "sentenceNumber": 4,
+        "sentenceText": "a turkish court has blocked access to twitter and youtube after they refused a request to remove pictures of prosecutor mehmet selim kiraz held during an armed siege last week."
+      },
+      {
+        "sentenceNumber": 5,
+        "sentenceText": "grief: the family of mehmet selim kiraz grieve over his coffin during his funeral at eyup sultan mosque in istanbul, turkey."
+      },
+      {
+        "sentenceNumber": 6,
+        "sentenceText": "he died in hospital after he was taken hostage by the far-left organisation."
+      },
+      {
+        "sentenceNumber": 7,
+        "sentenceText": "two of his captors were killed when security forces took back the building where the far-left group was holding him."
+      },
+      {
+        "sentenceNumber": 8,
+        "sentenceText": "gunshots were heard and smoke could be seen rising from the scene at the end of the six-hour stand-off."
+      },
+      {
+        "sentenceNumber": 9,
+        "sentenceText": "mr kiraz, a father-of-two married to a judge who also worked at the courthouse, was targeted for his part in an investigation into the death of berkin elvan."
+      },
+      {
+        "sentenceNumber": 10,
+        "sentenceText": "the 15-year-old was severely wounded after being hit on the head by a tear-gas canister fired by a police officer during anti-government protests in istanbul in june 2013."
+      },
+      {
+        "sentenceNumber": 11,
+        "sentenceText": "after spending 269 days in a coma, elvan eventually died on march 11 last year."
+      },
+      {
+        "sentenceNumber": 12,
+        "sentenceText": "his death, and the subsequent investigation, have since become a rallying point for the country 's far-left."
+      },
+      {
+        "sentenceNumber": 13,
+        "sentenceText": "gathering: prosecutors, lawyers and judges stand near a statue of lady justice during the funeral ceremony."
+      },
+      {
+        "sentenceNumber": 14,
+        "sentenceText": "a british national, of polish origin but who has not been named, was arrested on saturday as part of an operation against the revolutionary people 's liberation party-front, according to reports."
+      },
+      {
+        "sentenceNumber": 15,
+        "sentenceText": "a foreign office spokeswoman said this morning: ' i can confirm that a british national has been arrested in turkey and that we are offering consular assistance.'"
+      },
+      {
+        "sentenceNumber": 16,
+        "sentenceText": "before imposing the blocks on the websites, turkish authorities had tried to prevent newspapers printing images taken during the siege last week."
+      },
+      {
+        "sentenceNumber": 17,
+        "sentenceText": "the newspapers were accused by the government of ` spreading terrorist propaganda ' in sharing the images of the hostage-taking."
+      },
+      {
+        "sentenceNumber": 18,
+        "sentenceText": "presidential spokesman ibrahim kalin said: ` this has to do with the publishing of the prosecutor 's"
+      },
+      {
+        "sentenceNumber": 19,
+        "sentenceText": "what happened in the aftermath ( of the prosecutor 's"
+      },
+      {
+        "sentenceNumber": 20,
+        "sentenceText": "killing ) is as grim as the incident itself."
+      },
+      {
+        "sentenceNumber": 21,
+        "sentenceText": "` the demand from the prosecutor 's office is that this image"
+      },
+      {
+        "sentenceNumber": 22,
+        "sentenceText": "not be used anywhere in electronic platforms."
+      },
+      {
+        "sentenceNumber": 23,
+        "sentenceText": "` the wife and children of prosecutor kiraz have been deeply"
+      },
+      {
+        "sentenceNumber": 24,
+        "sentenceText": "the images are everywhere."
+      },
+      {
+        "sentenceNumber": 25,
+        "sentenceText": "he added: ' a request has been made to both twitter and youtube for the"
+      },
+      {
+        "sentenceNumber": 26,
+        "sentenceText": "removal of the images and posts but they have not accepted it"
+      },
+      {
+        "sentenceNumber": 27,
+        "sentenceText": "and no response has been given."
+      },
+      {
+        "sentenceNumber": 28,
+        "sentenceText": "this decision has been taken through a court in istanbul.'"
+      },
+      {
+        "sentenceNumber": 29,
+        "sentenceText": "critical: prosecutor mehmet selim kiraz was taken to hospital with gunshot wounds but died of his injuries."
+      },
+      {
+        "sentenceNumber": 30,
+        "sentenceText": "strength of feeling: elvan has since become an icon for the turkish far-left and his supporters accuse the authorities of covering up the circumstances and perpetrators of his death."
+      },
+      {
+        "sentenceNumber": 31,
+        "sentenceText": "google said it was working to restore service to the youtube"
+      },
+      {
+        "sentenceNumber": 32,
+        "sentenceText": "video-sharing site, which it owns."
+      },
+      {
+        "sentenceNumber": 33,
+        "sentenceText": "working to restore access for its users."
+      },
+      {
+        "sentenceNumber": 34,
+        "sentenceText": "facebook said it had complied with a turkish court order requiring it to restrict access to some content or face a block on its service."
+      },
+      {
+        "sentenceNumber": 35,
+        "sentenceText": "a company spokesman said it would appeal the order."
+      },
+      {
+        "sentenceNumber": 36,
+        "sentenceText": "turkey 's telecoms regulator could not immediately be reached"
+      },
+      {
+        "sentenceNumber": 37,
+        "sentenceText": "and there was no statement on its website."
+      },
+      {
+        "sentenceNumber": 38,
+        "sentenceText": "this is not the first time that turkish authorities have imposed blocks on social media sites and networks."
+      },
+      {
+        "sentenceNumber": 39,
+        "sentenceText": "in the run-up to local elections in march 2014 blocks were imposed after recordings circulated allegedly revealing corruption among senior officials."
+      },
+      {
+        "sentenceNumber": 40,
+        "sentenceText": "figures provided by twitter revealed that turkey filed more requests to remove content from the social network than any other nation between july and december 2014."
+      }
+    ],
+    "GPT_setences": [
+      "a turkish court imposed the blocks because images of the deadly siege were being shared on social media and ` deeply upset ' the wife and children of mehmet selim kiraz, the hostage who was killed.",
+      "the 46-year-old turkish prosecutor died in hospital when members of the revolutionary people 's liberation party-front ( dhkp-c ) stormed a courthouse and took him hostage.",
+      "two of his captors were killed when security forces took back the building where the far-left group was holding him."
+    ],
+    "GPT_sentence_ids": [
+      1,
+      2,
+      7
+    ]
+  },
+  {
+    "id": 1,
+    "name": "CNNDM_roberta_1",
+    "original_text": [
+      "deborah fuller has been banned from keeping animals after she dragged her dog behind her car , causing wounds as she drove at 30mph",
+      "a dog breeder and exhibitor who dragged her pet behind her car at a speed of 30mph and failed to get painful wounds to its paws and chest treated , has been banned from keeping animals and had her dogs confiscated .",
+      "deborah fuller , 56 , dragged her dog tango for 400 metres behind her car as she drove along the b1066 near long melford , essex .",
+      "the rhodesian ridgeback was left with injuries to all four paws as well as grazing to his chest and a deep wound on his elbow .",
+      "he is believed to have somehow escaped from the boot of her car and was dragged along the single carriageway because his lead was attached to the vehicle 's tailgate .",
+      "fuller , of lawford , essex , denied causing unnecessary suffering to an animal by not taking it to the vets and failing to take steps to safely secure a dog within a vehicle , but was convicted following a hearing at chelmsford magistrates ' court .",
+      "fuller has also been banned from keeping animals for five years and had her 27 other dogs confiscated .",
+      "chairman of the bench anthony ealden said if tango had been taken to the vet earlier ` unnecessary suffering ' could have been avoided .",
+      "he said : ` we believe for whatever reason , known only to yourself , you had no intention of getting veterinary treatment as a matter of urgency .",
+      "` we do not accept your reason for delaying treatment as reasonable . '",
+      "the incident took place on june 11 , 2014 , when the dog was seen being dragged along the b1006 behind the car .",
+      "tree surgeons working nearby spotted what had happened and tried to get fuller , who is a rhodesian ridgeback breeder and exhibitor , to stop her car .",
+      "she did n't stop until she reached the end of the carriageway and they took her registration number and reported her to police who called the rspca , the court heard .",
+      "tango was later found by inspectors in an outbuilding at fuller 's home with bandages on his paws .",
+      "he was taken to a vet and given treatment for his injuries , which took eight weeks .",
+      "tango was left with considerable injuries to his paws and stomach , as well as a deep elbow wound",
+      "tango , a rhodesian ridgeback , pictured before being injured by being dragged along the road",
+      "fuller claimed she had not been aware the rear hatch of her car had opened and claimed she had given the one-year-old dog first aid , and had already arranged for him to go to the vet when police turned up .",
+      "mike fullerton , defending fuller , said : ` when deborah fuller was being restrained she asked why she was not allowed to take the dog to the vet . '",
+      "rspca inspector sam garvey said after the sentencing : ` eyewitnesses report they saw the dog being dragged about 400 metres at a speed of 30mph .",
+      "` this must have been horrific for poor tango .",
+      "so painful , and so distressing .",
+      "` it is hard to say what caused tango to be dragged behind a moving car in this way , but by the time we found him , seven hours later , he was urgently in need of vet treatment .",
+      "the animal was taken to the vets and treated for the burns , suffered when he was dragged along the road",
+      "judges ruled that the dog 's suffering could have been avoided if fuller had taken him to the vets earlier",
+      "` he had injuries to the pads of all four feet , causing the black layer of skin to be removed .",
+      "he also had grazing to his chest area and a nasty deep wound to his elbow and leg area .",
+      "` it took a period of eight weeks to heal the wounds and for his skin to grow back over his pads so he could walk without discomfort . '",
+      "fuller was also ordered to pay # 3,000 costs , given a 12 month community order and a two month curfew from 7pm to 7am .",
+      "tango was taken to a vet for treatment after being found and has made a full recovery in foster care .",
+      "the court also allowed confiscation of all the animals owned by fuller , which are currently in rspca care .",
+      "tango was removed from fuller , along with more than 40 other dogs that were at her essex home",
+      "fuller and her partner phil sheldrake , 59 , previously pleaded guilty to 16 charges of causing unnecessary suffering and failing to meet the dogs ' needs at colchester magistrates court in june .",
+      "earlier this month the case was thrown out after the high court ruled that inspectors did have the correct warrant to seize 44 dogs from their essex home .",
+      "tendring district council had been granted a warrant to investigate ` nuisance ' at the house , following complaints about noise and dog faeces .",
+      "the council joined forces with the rspca and seized 44 dogs from the house , with the animal welfare charity claiming several of the animals were emaciated .",
+      "however the trial was halted when district judge kenneth sheraton said evidence gathered by inspectors was inadmissible because they did not have the correct warrant ."
+    ],
+    "original_summary": [
+      "warning : graphic content - deborah fuller dragged her one-year-old dog behind her car for 400 metres at a speed of around 30mph .",
+      "animal was left with wounds to paws and elbow and grazes on his stomach .",
+      "fuller , a breeder , failed to quickly take the animal to vet which could have reduced the ` unnecessary suffering ' of the rhodesian ridgeback .",
+      "she was banned from keeping animals for five years and given a curfew ."
+    ],
+    "GPT_topic": "daily news",
+    "GPT_raw_json": [
+      {
+        "sentenceNumber": 0,
+        "sentenceText": "Deborah Fuller has been banned from keeping animals after she dragged her dog behind her car, causing wounds as she drove at 30mph."
+      },
+      {
+        "sentenceNumber": 1,
+        "sentenceText": "A dog breeder and exhibitor who dragged her pet behind her car at a speed of 30mph and failed to get painful wounds to its paws and chest treated, has been banned from keeping animals and had her dogs confiscated."
+      },
+      {
+        "sentenceNumber": 2,
+        "sentenceText": "Deborah Fuller, 56, dragged her dog Tango for 400 metres behind her car as she drove along the B1066 near Long Melford, Essex."
+      },
+      {
+        "sentenceNumber": 3,
+        "sentenceText": "The Rhodesian Ridgeback was left with injuries to all four paws as well as grazing to his chest and a deep wound on his elbow."
+      },
+      {
+        "sentenceNumber": 4,
+        "sentenceText": "He is believed to have somehow escaped from the boot of her car and was dragged along the single carriageway because his lead was attached to the vehicle's tailgate."
+      },
+      {
+        "sentenceNumber": 5,
+        "sentenceText": "Fuller, of Lawford, Essex, denied causing unnecessary suffering to an animal by not taking it to the vets and failing to take steps to safely secure a dog within a vehicle, but was convicted following a hearing at Chelmsford Magistrates' Court."
+      },
+      {
+        "sentenceNumber": 6,
+        "sentenceText": "Fuller has also been banned from keeping animals for five years and had her 27 other dogs confiscated."
+      },
+      {
+        "sentenceNumber": 7,
+        "sentenceText": "Chairman of the bench Anthony Ealden said if Tango had been taken to the vet earlier ` unnecessary suffering' could have been avoided."
+      },
+      {
+        "sentenceNumber": 8,
+        "sentenceText": "He said: ` We believe for whatever reason, known only to yourself, you had no intention of getting veterinary treatment as a matter of urgency."
+      },
+      {
+        "sentenceNumber": 9,
+        "sentenceText": "` We do not accept your reason for delaying treatment as reasonable.'"
+      },
+      {
+        "sentenceNumber": 10,
+        "sentenceText": "The incident took place on June 11, 2014, when the dog was seen being dragged along the B1006 behind the car."
+      },
+      {
+        "sentenceNumber": 11,
+        "sentenceText": "Tree surgeons working nearby spotted what had happened and tried to get Fuller, who is a Rhodesian Ridgeback breeder and exhibitor, to stop her car."
+      },
+      {
+        "sentenceNumber": 12,
+        "sentenceText": "She didn't stop until she reached the end of the carriageway and they took her registration number and reported her to police who called the RSPCA, the court heard."
+      },
+      {
+        "sentenceNumber": 13,
+        "sentenceText": "Tango was later found by inspectors in an outbuilding at Fuller's home with bandages on his paws."
+      },
+      {
+        "sentenceNumber": 14,
+        "sentenceText": "He was taken to a vet and given treatment for his injuries, which took eight weeks."
+      },
+      {
+        "sentenceNumber": 15,
+        "sentenceText": "Tango was left with considerable injuries to his paws and stomach, as well as a deep elbow wound."
+      },
+      {
+        "sentenceNumber": 16,
+        "sentenceText": "Tango, a Rhodesian Ridgeback, pictured before being injured by being dragged along the road."
+      },
+      {
+        "sentenceNumber": 17,
+        "sentenceText": "Fuller claimed she had not been aware the rear hatch of her car had opened and claimed she had given the one-year-old dog first aid, and had already arranged for him to go to the vet when police turned up."
+      },
+      {
+        "sentenceNumber": 18,
+        "sentenceText": "Mike Fullerton, defending Fuller, said: ` When Deborah Fuller was being restrained she asked why she was not allowed to take the dog to the vet.'"
+      },
+      {
+        "sentenceNumber": 19,
+        "sentenceText": "RSPCA inspector Sam Garvey said after the sentencing: ` Eyewitnesses report they saw the dog being dragged about 400 metres at a speed of 30mph."
+      },
+      {
+        "sentenceNumber": 20,
+        "sentenceText": "` This must have been horrific for poor Tango."
+      },
+      {
+        "sentenceNumber": 21,
+        "sentenceText": "So painful, and so distressing."
+      },
+      {
+        "sentenceNumber": 22,
+        "sentenceText": "` It is hard to say what caused Tango to be dragged behind a moving car in this way, but by the time we found him, seven hours later, he was urgently in need of vet treatment."
+      },
+      {
+        "sentenceNumber": 23,
+        "sentenceText": "The animal was taken to the vets and treated for the burns, suffered when he was dragged along the road."
+      },
+      {
+        "sentenceNumber": 24,
+        "sentenceText": "Judges ruled that the dog's suffering could have been avoided if Fuller had taken him to the vets earlier."
+      },
+      {
+        "sentenceNumber": 25,
+        "sentenceText": "` He had injuries to the pads of all four feet, causing the black layer of skin to be removed."
+      },
+      {
+        "sentenceNumber": 26,
+        "sentenceText": "He also had grazing to his chest area and a nasty deep wound to his elbow and leg area."
+      },
+      {
+        "sentenceNumber": 27,
+        "sentenceText": "` It took a period of eight weeks to heal the wounds and for his skin to grow back over his pads so he could walk without discomfort.'"
+      },
+      {
+        "sentenceNumber": 28,
+        "sentenceText": "Fuller was also ordered to pay \u00a33,000 costs, given a 12 month community order and a two month curfew from 7pm to 7am."
+      },
+      {
+        "sentenceNumber": 29,
+        "sentenceText": "Tango was taken to a vet for treatment after being found and has made a full recovery in foster care."
+      },
+      {
+        "sentenceNumber": 30,
+        "sentenceText": "The court also allowed confiscation of all the animals owned by Fuller, which are currently in RSPCA care."
+      },
+      {
+        "sentenceNumber": 31,
+        "sentenceText": "Tango was removed from Fuller, along with more than 40 other dogs that were at her Essex home."
+      },
+      {
+        "sentenceNumber": 32,
+        "sentenceText": "Fuller and her partner Phil Sheldrake, 59, previously pleaded guilty to 16 charges of causing unnecessary suffering and failing to meet the dogs' needs at Colchester Magistrates Court in June."
+      },
+      {
+        "sentenceNumber": 33,
+        "sentenceText": "Earlier this month the case was thrown out after the High Court ruled that inspectors did have the correct warrant to seize 44 dogs from their Essex home."
+      },
+      {
+        "sentenceNumber": 34,
+        "sentenceText": "Tendring District Council had been granted a warrant to investigate ` nuisance' at the house, following complaints about noise and dog faeces."
+      },
+      {
+        "sentenceNumber": 35,
+        "sentenceText": "The council joined forces with the RSPCA and seized 44 dogs from the house, with the animal welfare charity claiming several of the animals were emaciated."
+      },
+      {
+        "sentenceNumber": 36,
+        "sentenceText": "However the trial was halted when district judge Kenneth Sheraton said evidence gathered by inspectors was inadmissible because they did not have the correct warrant."
+      }
+    ],
+    "GPT_setences": [
+      "Deborah Fuller dragged her one-year-old dog behind her car for 400 metres at a speed of around 30mph.",
+      "The animal was left with wounds to paws and elbow and grazes on his stomach.",
+      "Fuller, a breeder, failed to quickly take the animal to vet which could have reduced the ` unnecessary suffering' of the Rhodesian Ridgeback.",
+      "She was banned from keeping animals for five years and given a curfew."
+    ],
+    "GPT_sentence_ids": [
+      2,
+      3,
+      7,
+      6
+    ]
+  }
+]

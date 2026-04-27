@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>User Study</title>
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  
+  <!--Bootstrap-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+  <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+
+  <!-- Load d3-cloud -->
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
+  <!-- <script src=""></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
+  {% block head %}
+  {% endblock %}
+</head>
+
+<body>
+    <!-- lightbox container hidden with CSS -->
+    <a href="#_" class="lightbox" id="tutorial">
+    <div id="videoModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="false" style="display: block;">
+      <div id = "videoModal2" class="modal-body" style="margin-top:50px">
+          <video id="tutorialVideo" width="870" height="489" src="images/SuDocu.mp4" frameborder="0" allowfullscreen="" controls="controls">
+          </video>
+        </div>
+      <div class="modal-footer"></div>
+    </div>
+    </a>
+
+<!-- 
+  <nav class="navbar navbar-light" style="background-color: whitesmoke; height: 18mm;">
+    <div class="container-fluid" id="containerNavbar">
+      <a class="navbar-brand" href="http://sudocu.cs.umass.edu/">
+        <h1>System U</h1>
+      </a>
+        <div class="navbar-nav">
+          <a class="nav-link" id="tutorialVideoNav" href="#">Tutorial video <span class="sr-only">(current)</span></a>
+        </div>
+    </div>
+  </nav> -->
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: whitesmoke; height: 18mm;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">System U</a>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-link" id="tutorialVideoNav" href="#"><i class="fa fa-play"></i> Tutorial video <span class="sr-only">(current)</span></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-app.js"></script>
+
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->  
+  <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-database.js"></script>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.3/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLVqj7ehZhAPXydgsvDWLJD7luKFBkKFg",
+      authDomain: "sudocu-fc487.firebaseapp.com",
+      projectId: "sudocu-fc487",
+      storageBucket: "sudocu-fc487.appspot.com",
+      messagingSenderId: "110827457299",
+      appId: "1:110827457299:web:6023fd1d7a1a33b5e228e6",
+      measurementId: "G-SSMTJZCHS1"
+    };
+  
+    // // Initialize Firebase
+    // const app = initializeApp(firebaseConfig);
+    // const analytics = getAnalytics(app);
+    $(document).ready(function() {
+      $('#studyNav').click(function() {
+        location.href = './preStudy'
+      })
+
+      $('#tutorialVideoNav').click(function() {
+        window.open('/tutorial-systemU', '_blank')
+      })
+    })
+  </script>
+
+  {% block content %}
+  {% endblock %}
+</body>
+
+</html>

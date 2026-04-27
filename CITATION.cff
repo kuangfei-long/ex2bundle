@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software or the Ex2Bundle algorithm, please cite our paper:"
+title: "Ex2Bundle: Intent-Aware Bundle Retrieval via Example-Guided PaQL"
+type: software
+authors:
+  # TODO: replace with the actual author list, in paper order.
+  - family-names: "[Last]"
+    given-names: "[First]"
+    affiliation: "[Affiliation]"
+preferred-citation:
+  type: conference-paper
+  title: "Ex2Bundle: Intent-Aware Bundle Retrieval via Example-Guided PaQL"
+  authors:
+    - family-names: "[Last]"
+      given-names: "[First]"
+      affiliation: "[Affiliation]"
+  conference:
+    name: "ACM SIGMOD International Conference on Management of Data"
+  year: 2026
+  # TODO: add doi / pages once published

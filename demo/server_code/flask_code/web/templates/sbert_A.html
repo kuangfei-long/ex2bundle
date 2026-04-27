@@ -1,0 +1,101 @@
+{% extends "base-sbert.html" %}
+
+{% block head %}
+  {{ super() }}
+  <script async src="{{ url_for('static', filename='sbert.js') }}" type="module"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!--    Summarizing Documents by Example-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> </h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"> </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="sbertConfirmModal">OK</button>
+        <button type="button" class="btn btn-primary" id="prim">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loader_background"></div>
+  <div class="wrapper">
+    <div id="loaderSbert"></div>
+    <div id="wait" style="color: black">Please Wait.</div>
+    
+    <div class="input">
+      <div class="section inputSection">
+        
+        <div class="mainHeaderWrapper">
+          <div class="mainHeaderSbert">Input Your Example Summaries<span id="infoi-main"><i id="sumSelectorInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-html="true" data-bs-content="<p class='text-left'>Create example summaries by selecting a document from the drop-down menu below and clicking on sentences that are of interest to you. You can additionally search for specific topics using the search bar below. After selecting the sentences you want in your example summary, click submit summary to submit it to the system. You can later update any example summary by selecting the state from the drop-down menu again, selecting new or unselecting old sentences, and then clicking “Update Summary”."></i></span></div>
+        </div>
+        <div>
+          <select id="inputDocumentSelector" title="click to select a document" class="dropdown">
+            <option hidden>-- Select Document --</option>
+          </select>
+          <div class="search">
+            <input id="searchInput" type="text" class="searchTerm" title="search in the document"
+              placeholder="Type text to filter">
+          </div>
+        </div>
+        <div id="docContentSbert"></div>
+
+        <span class="d-inline-block" id='subupButton' tabindex="0" data-bs-toggle="tooltip" title="Submit Summary" data-bs-trigger="hover" data-bs-placement="top">
+          <button id='submitSummary' tabindex="0" class="button-sbert" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Selection Added">Submit Summary</button>
+        </span>
+        
+        <!-- <button id='button_learnSummary' tabindex="0" class="button-sbert" role="button" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Learning Summerization" style="margin-left:30px;">Analyze Your Summaries</button> -->
+      </div>
+    </div>
+
+    <div class="generatedSummarySectionSbert">
+      <div class="mainHeaderWrapper">
+        <div class="subHeader">Generated Summaries<span id="infoi-big"><i id="genSumInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-html="true" data-bs-content="<p class='text-left'>Generate an automatic summary for a document by selecting it from the document drop-down menu below.
+          "></i></span></div>
+      </div>
+
+      <!-- <label for="outputDocument" style="width: 100%"></label> -->
+      <div class="OutputAndWarn">
+        <select id="outputDocumentSelector" title="click to display a learned summary" class="dropdown">
+          <option hidden value="0">-- Select Document --</option>
+        </select>
+        <div class="warnMes2" style="display: none">
+          <i class="fas fa-exclamation-circle" id="warnMesCircle" style="color: red; margin-right: 50;"></i>
+          <h6 id="warnMesText" style="color: red; margin-left: 50;">
+            Please analyze your changes.
+          </h6>
+        </div>
+      </div>
+      <div id="generated"></div>    
+    </div>
+
+
+
+    <div class="example_col_sbert">
+
+      <div class="mainHeaderWrapper">
+        <div class="mainHeaderSbert">Your Example Summaries<span id="infoi-main"><i id="exSumInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-html="true" data-bs-content="<p class='text-left'>The example summary you have created for any document can be viewed below by clicking on the button with the appropriate document title. Additionally, you can delete an example summary by selecting the red x icon on any of the provided examples. After creating a set of example summaries you are happy with, begin generating summaries for other documents by first selecting the “Analyze Your Summaries” button. This should be done whenever the example summaries are updated." disabled></i></span></div>
+      </div>
+
+      <div class="filterWrapper"><div id="summaryWarn" style="color: #C00000;">No example summaries provided, please submit a summary.</div><div class="summaryStatesSbert"></div></div>
+
+      <div id="exampleWrapper"><div class="exampleSummaries"></div></div>     
+      <button id='button_learnSummary' tabindex="0" class="button-sbert" role="button" type="button" data-bs-toggle="tooltip" title="Analyze your summaries" data-bs-trigger="hover" data-bs-placement="top" style="margin-left:30px;">Analyze Your Summaries</button>       
+    </div>
+  </div>  <!-- end of wrapper object  -->
+
+  <div>
+    <button class='button-sbert' id='button_completeTask' type="button" disabled>Finish Task</button>
+  </div>
+</div>
+{% endblock %}

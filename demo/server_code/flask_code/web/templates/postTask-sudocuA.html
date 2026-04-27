@@ -1,0 +1,363 @@
+{% extends "base-sudocu.html" %}
+
+{% block head %}
+  {{ super() }}
+  <script async src="{{ url_for('static', filename='postTask-sudocu.js') }}" type="module"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container" display:flex; flex-direction: column; justify-content: flex-start;
+    align-items: center; overflow-y: auto;>
+        <h3 style="padding-left: 15px; padding-right: 15px;">Post-Task Questionnaire</h3>
+        <p style="padding-left: 15px; padding-right: 15px;">Please answer the following questions to the best of your
+            abilities. You must answer all questions.</p>
+        <div class="preContainer" id="pre_container">
+            <form class="needs-validation" novalidate id="demo_form">
+                <div class="form-group column">
+                    <label for="q1Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        1. Which states did you choose as example input summaries? (Select all states chosen previously)
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="selectBox" id="q1Select" multiple required>
+                        <script>
+                              $.ajax({
+                                url: "http://127.0.0.1:5000/get_states_sudocu",
+                                async: true,
+                                type: "GET",
+                                dataType: "json",
+                                success: function (data) {
+                                    for (let i = 0; i < data.length; i++) {
+                                        //dynamically create option
+                                        let option_input = document.createElement("OPTION");
+                                        option_input.innerHTML = data[i].state_name;
+                                        document.getElementById("q1Select").options.add(option_input);
+                                    }
+                                },
+                            });
+                        </script>
+                    </select>
+                    <div class="invalidFeedback" id="q1Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q2Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        2. Mention at least three states you considered based on the generated summaries?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="selectBox" id="q2Select" multiple required>
+                        <script>
+                            $.ajax({
+                              url: "http://127.0.0.1:5000/get_states_sudocu",
+                              async: true,
+                              type: "GET",
+                              dataType: "json",
+                              success: function (data) {
+                                for (let i = 0; i < data.length; i++) {
+                                    //dynamically create option
+                                    let option_input = document.createElement("OPTION");
+                                    option_input.innerHTML = data[i].state_name;
+                                    document.getElementById("q2Select").options.add(option_input);
+                                }
+                              },
+                          });
+                      </script>
+                    </select>
+                    <div class="invalidFeedback" id="q2Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q3Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        3. Did you modify the example input summaries?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q3Select" required>
+                        <option value="">Pick an option</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                    <div class="invalidFeedback" id="q3Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q3Yes" style="display: none">
+                    <label for="q3YesText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why did you modify them?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q3YesText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q3YesFeedback" style="margin-left: 15px;"></div>
+                </div>
+
+                <div class="form-group column" id="q3No" style="display: none">
+                    <label for="q3NoText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why did you not modify them?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q3NoText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q3NoFeedback" style="margin-left: 15px;"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q4Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        4. Rate the usefulness of modifying example input summaries
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q4Select" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Not useful at all</option>
+                        <option value="1">Somewhat useful</option>
+                        <option value="2">Neutral</option>
+                        <option value="3">Useful</option>
+                        <option value="4">Very useful</option>
+                    </select>
+                    <div class="invalidFeedback" id="q4Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q5Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        5. How easy was it to modify the example input summaries?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q5Select" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Not easy at all</option>
+                        <option value="1">Somewhat easy</option>
+                        <option value="2">Neutral</option>
+                        <option value="3">Easy</option>
+                        <option value="4">Very easy</option>
+                    </select>
+                    <div class="invalidFeedback" id="q5Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q6Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        6. Did you use the relative topic importance sliders?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q6Select" required>
+                        <option value="">Pick an option</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                    <div class="invalidFeedback" id="q6Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q6Yes1" style="display: none">
+                    <label for="q6Yes1Response" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        How did you use the relative topic importance sliders? 
+                    </b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12"> 
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q6Yes1Response" placeholder="Write your response here" required>
+                        <div class="invalidFeedback" id="q6Yes1Feedback"></div>
+                    </div>    
+                </div>
+                
+                <div class="form-group column" id="q6Yes2" style="display: none">
+                    <label for="q6Yes2Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        Did you see any change in the summary after changing the relative topic importance sliders?
+                    </b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <select class="form-select" id="q6Yes2Select" required>
+                            <option value="">Pick an option</option>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                        <div class="invalidFeedback" id="q6Yes2Feedback"></div>
+                    </div>
+                </div>
+
+                <div class="form-group column" id="q6Yes2Yes" style="display: none">
+                    <label for="q6Yes2YesResponse" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>What changes did you see?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q6Yes2YesResponse" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q6Yes2YesFeedback" style="margin-left: 15px;"></div>
+                </div>
+
+                <div class="form-group column" id="q6No" style="display: none">
+                    <label for="q6NoResponse" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        Why did you not use the relative topic importance sliders? 
+                    </b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q6NoResponse" placeholder="Write your response here" required>
+                        <div class="invalidFeedback" id="q6NoFeedback" style="margin-left: 15px;"></div>
+                    </div>
+                </div>
+                
+
+                <div class="form-group column">
+                    <label for="q7Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        7. Rate the usefulness of using relative topic importance sliders
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q7Select" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Not useful at all</option>
+                        <option value="1">Somewhat useful</option>
+                        <option value="2">Neutral</option>
+                        <option value="3">Useful</option>
+                        <option value="4">Very useful</option>
+                    </select>
+                    <div class="invalidFeedback" id="q7Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q8Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        8. How easy was it to use the relative topic importance sliders?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q8Select" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Not easy at all</option>
+                        <option value="1">Somewhat easy</option>
+                        <option value="2">Neutral</option>
+                        <option value="3">Easy</option>
+                        <option value="4">Very easy</option>
+                    </select>
+                    <div class="invalidFeedback" id="q8Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q9Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        9. Rate the quality of the generated summaries.
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q9Select" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Very Poor</option>
+                        <option value="1">Poor</option>
+                        <option value="2">Average</option>
+                        <option value="3">Good</option>
+                        <option value="4">Excellent</option>
+                    </select>
+                    <div class="invalidFeedback" id="q9Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q10Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        10. Did the generated summaries help you decide which state to live in?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q10Select" required>
+                        <option value="">Pick an option</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                    <div class="invalidFeedback" id="q10Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q10Yes" style="display: none">
+                    <label for="q10YesText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>How did the summaries help you decide?                    </b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q10YesText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q10YesFeedback" style="margin-left: 15px;"></div>
+                </div>
+
+                <div class="form-group column" id="q10No" style="display: none">
+                    <label for="q10NoText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why not?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q10NoText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q10NoFeedback" style="margin-left: 15px;"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q11Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        11. Did you find any unexpected information in the generated summaries?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q11Select" required>
+                        <option value="">Pick an option</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                    <div class="invalidFeedback" id="q11Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q11Yes" style="display: none">
+                    <label for="q11YesText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why was it unexpected?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="col-lg-12 col-m-12 col-sm-12 col-form-label" id="q11YesText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q11YesFeedback" style="margin-left: 15px;"></div>
+                </div>
+
+                <div class="form-group column" style="margin-bottom: 0;">
+                    <label for="q12Response" class="col-lg-12 col-m-12 col-sm-12 col-form-label" style="margin-bottom: 1rem;"><b>
+                        12. Why did you choose this particular state?</b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12"  id="txtArea">
+                    <textarea id="q12Response" cols="110" rows="3" placeholder="Write your response here" required></textarea>
+                    <div class="invalidFeedback" id="q12Feedback"></div>
+                </div>
+                
+                <div class="form-group column" style="margin-bottom: 0;">
+                    <label for="q13Response" class="col-lg-12 col-m-12 col-sm-12 col-form-label" style="margin-bottom: 1rem;"><b>
+                        13. What did you like about System U?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12"  id="txtArea">
+                    <textarea id="q13Response" cols="110" rows="3" placeholder="Write your response here" required></textarea>
+                    <div class="invalidFeedback" id="q13Feedback"></div>
+                </div>
+                
+                <div class="form-group column" style="margin-bottom: 0;">
+                    <label for="q14Response" class="col-lg-12 col-m-12 col-sm-12 col-form-label" style="margin-bottom: 1rem;"><b>
+                        14. What did you dislike about System U?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12"  id="txtArea">
+                    <textarea id="q14Response" cols="110" rows="3" placeholder="Write your response here" required></textarea>
+                    <div class="invalidFeedback" id="q14Feedback"></div>
+                </div>
+                
+                <div class="form-group column" style="margin-bottom: 0;">
+                    <label for="q15Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label" style="margin-bottom: 1rem;"><b>
+                        15. “I would like to use System U to search information across multiple documents/websites in future”
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q15Select" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Strongly disagree</option>
+                        <option value="1">Disagree</option>
+                        <option value="2">Neutral</option>
+                        <option value="3">Agree</option>
+                        <option value="4">Strongly agree</option>
+                    </select>
+                    <div class="invalidFeedback" id="q15Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q16Response" class="col-lg-12 col-m-12 col-sm-12 col-form-label" style="margin-bottom: 1rem;"><b>
+                        16. Other comments:
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12"  id="txtArea">
+                    <textarea id="q16Response" cols="110" rows="3" placeholder="Write your response here"></textarea>
+                </div>
+
+            </form>
+
+            <div style="display: flex; width: 100%; align-items: center; justify-content: center;">
+                <div id="endloading" style="display: none;">Saving Input. Please don't close the window.
+                    <img src="images/hg.gif" style="margin-left: 5px; margin-top:-5px; height:20px; height: 20px">
+                </div>
+                <div id="continue" title="Continue to Study"
+                    style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 200px; height: 30px; border-radius: 20px; border: solid thin lightgray; text-align: center; margin: 20px;">
+                    Continue <i class="fa fa-arrow-right" style="margin-left:10px" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,4 @@
+Flask==1.1.1
+Models==0.9.7
+numpy==1.22.1
+pandas==1.1.5

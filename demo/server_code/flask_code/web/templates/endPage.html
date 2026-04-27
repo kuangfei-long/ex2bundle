@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  
+  <!--Bootstrap-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
+  <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+
+  <!-- Load d3-cloud -->
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
+  <!-- <script src=""></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: whitesmoke; height: 18mm;">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="http://sudocu.cs.umass.edu/">User Study</a>
+        </div>
+    </nav>
+
+    <div style="display:flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px;">
+        <h3 style="font-size: 23px; font-weight: 500;">Thank you for participating in our study!</h3>
+        <h1 id="useridtext" style="margin-top:50px; margin-bottom: 50px; font-size: 25px; font-weight: 900;"></h1>
+        <div style="display: flex; margin-left: 20%; margin-right: 20%; border-style: solid; border-color: black;">
+            <i class="fas fa-exclamation-circle" style="color: red; margin-top: 4.5px; margin-left: 3px;"></i>
+            <h3 style="font-size: 20px; font-weight: 500; margin-left: 5px;"> You input has been saved. If you are a <b>Mechanical Turker</b>, please copy your <b>user ID</b> and proceed to
+                <b>Mechanical-Turk</b> for the last step to finish the study and receive your payment.</h3>
+        </div>
+        
+    </div>
+    
+    <script>
+        document.getElementById("useridtext").innerHTML = "Your user ID is: " + localStorage.getItem("userId");
+    </script>
+</body>

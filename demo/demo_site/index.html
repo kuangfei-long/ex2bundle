@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>SuDocu</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <!-- Load d3-cloud -->
+  <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+
+  <!-- <script src=""></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.13.0/css/all.css">
+
+  <script type="text/javascript" src="js/scripts.js"></script>
+</head>
+
+<body>
+   <!-- lightbox container hidden with CSS -->
+   <a href="#_" class="lightbox" id="tutorial">
+   <div id="videoModal" class="modal hide fade in" tabindex="-1" role="dialog" aria-labelledby="videoModalLabel" aria-hidden="false" style="display: block;">
+     <div id = "videoModal2" class="modal-body" style="margin-top:50px">
+        <video id="tutorialVideo" width="870" height="489" src="images/SuDocu.mp4" frameborder="0" allowfullscreen="" controls="controls">
+        </video>
+      </div>
+     <div class="modal-footer"></div>
+   </div>
+   </a>
+
+
+<nav class="navbar navbar-light" style="background-color: whitesmoke;">
+  <div class="container-fluid">
+    <!-- <div class="navbar-header"> -->
+      <a class="navbar-brand" href="http://sudocu.cs.umass.edu/">
+        <img src="images/sudocu_logo.PNG" height="45" alt="SuDocu">
+      </a>
+    <!-- </div> -->
+    <ul class="nav navbar-nav navbar-right">
+      <li>
+        <a style="text-align:right;  width:50%" href="#tutorial" id = "watchTutorial">
+          <img style="width:100px;margin-right:10px;" src="images/tutorial.png">
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
+
+<!--    Summarizing Documents by Example-->
+  
+  <div id="loader_background"></div>
+  <div class="wrapper">
+    <div id="loader"></div>
+    
+    
+    <div class="input">
+      <div class="section inputSection">
+        
+        <div class="mainHeaderWrapper">
+          <div class="mainHeader">Input Your Example Summaries</div>
+          <div id="infoi-main"><i id="sumSelectorInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-content="Test"></i></div>
+        </div>
+        
+        <div>
+          <select id="inputDocumentSelector" title="click to select a document" class="dropdown">
+            <option hidden>-- Select Document --</option>
+          </select>
+          <div class="search">
+            <input id="searchInput" type="text" class="searchTerm" title="search in the document"
+              placeholder="Type text to filter">
+          </div>
+        </div>
+        <div id="docContent"></div>
+
+        <button id='submitSummary' tabindex="0" class="button" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Summary Submitted">Submit Summary</button>
+        <button id='updateSummary' tabindex="0" class="button" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Summary Updated" style="margin-left:30px">Update Summary</button>
+
+        <!-- <div class="subHeader">Example Summaries</div> -->
+        
+        <div class="mainHeaderWrapper">
+          <div class="subHeader">Generated Summaries</div>
+          <div id="infoi-big"><i id="genSumInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-content="Test"></i></div>
+        </div>
+  
+        <label for="outputDocument"></label>
+        <div>
+          <select id="outputDocumentSelector" title="click to display a learned summary" class="dropdown">
+            <option hidden value="0">-- Select Document --</option>
+          </select>
+        </div>
+        <div id="generated"></div>    
+        
+        <!-- <button id='button_generateSummary' class="button" type="button">GenerateSummary</button>    -->
+        <button id='button_generateSummary' tabindex="0" class="button" role="button" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Generating Summary">GenerateSummary</button>
+      
+
+      </div>
+    </div>
+
+
+
+    <div class="example_col">
+
+      <div class="mainHeaderWrapper">
+        <div class="mainHeader">Your Example Summaries</div>
+        <div id="infoi-main"><i id="exSumInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-content="Test" disabled></i></div>
+      </div>
+
+      <div id="exampleWrapper"><div class="exampleSummaries"></div></div>
+      <button id='button_learnSummary' tabindex="0" class="button" role="button" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Learning Summerization">Analyze Your Summaries</button>
+            
+    </div>
+  </div>  <!-- end of wrapper object  -->
+
+  <div class="wrapper_exp" id="explanation_view">
+
+    <!-- Header for the explaination tab -->
+    <div class="mainHeaderWrapper">
+      <div class="mainHeader">Summary Topic Explaination</div>
+      <div id="infoi-sub"><i id="PaQLInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-content="Test" disabled></i></div>
+    
+    </div>
+
+    <div class="topic-grid-container">
+      <!-- topic keyword document selector -->
+      <select id="topicDocumentSelector" title="select state to display keywords" class="dropdown", style="margin: auto;">
+        <option hidden value="-1">All Documents</option>
+      </select>
+      
+      <div class="topicImportanceWrapper">
+        <div class="gridHeader">Relative Topic Importance</div>
+      </div>
+      
+      <div class="topic_names_wrapper">
+        <div id="topic_names_block">
+          <div class="topic_names_entry" id="topic0_name">Topic 1</div>
+          <div class="topic_names_entry" id="topic1_name">Topic 2</div>
+          <div class="topic_names_entry" id="topic2_name">Topic 3</div>
+          <div class="topic_names_entry" id="topic3_name">Topic 4</div>
+          <div class="topic_names_entry" id="topic4_name">Topic 5</div>
+          <div class="topic_names_entry" id="topic5_name">Topic 6</div>
+          <div class="topic_names_entry" id="topic6_name">Topic 7</div>
+          <div class="topic_names_entry" id="topic7_name">Topic 8</div>
+          <div class="topic_names_entry" id="topic8_name">Topic 9</div>
+          <div class="topic_names_entry" id="topic9_name">Topic 10</div>
+        </div>
+      </div>
+
+      <div class="accordion_header_wrapper">
+        <div class="gridHeader" style="display: inline-block;">Topic Keywords (Decreasing Frequency)</div>
+        <button id="barchartButton" class="btn" style="height: 20px;width: 20px; padding: 0%;margin-left: auto;margin-right: 0;"><i class="fas fa-chart-bar" style="font-size:20px"></i></button>
+        <button id="wordCloudButton" class="btn" style="height: 20px;width: 20px; padding: 0%;margin-left: 10px;"><i class="fas fa-cloud"></i></button>
+      </div>
+
+
+      <div class="accordion_wrapper">
+        <div id="accordion_block">
+          <div class="accordion" id="topicKeywordAccordion" style="width: 100%;">
+            
+            <div class="accordion-topic-0">
+              <h2 class="accordion-header" id="accordion-heading-0" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseZero" aria-expanded="true" aria-controls="collapseZero" style="height: 30px;">
+                  economy, billion, industry, coal, production, oil, energy, manufacturing, agricultural, tourism
+                </button>
+              </h2>
+              <div id="collapseZero" class="accordion-collapse collapse" aria-labelledby="accordion-heading-0" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-0" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_0_graphic"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-topic-1">
+              <h2 class="accordion-header" id="accordion-heading-1" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-1" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne" style="height: 30px;">
+                  population, census, church, united, increase, according, bureau, percent, hispanic, catholic
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="accordion-heading-1" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-1" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_1_graphic"></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-2" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" style="height: 30px;">
+                  house, republican, party, democratic, presidential, governor, election, democrats, senatorte, republicans
+                </button>
+              </h2>
+              <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="accordion-heading-2" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-2" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_2_graphic"></div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-3" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="height: 30px;">
+                  national, league, football, park, airport, major, service, teams, home, play
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="accordion-heading-3" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-3" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_3_graphic"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-4" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-4" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" style="height: 30px;">
+                  city, university, largest, metropolitan, cities, county, capital, center, york, world
+                </button>
+              </h2>
+              <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="accordion-heading-4" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-4" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_4_graphic"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-5" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive" style="height: 30px;">
+                  mountains, east, river, west, climate, south, lake, eastern, mountain, southern
+                </button>
+              </h2>
+              <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="accordion-heading-5" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-5" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_5_graphic"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-6" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-6" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix" style="height: 30px;">
+                  war, territory, union, british, battle, colony, fort, confederate, army, de
+                </button>
+              </h2>
+              <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="accordion-heading-6" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-6" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_6_graphic"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-7" style="height: 30px; font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-7" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" style="height: 30px;">
+                  tax, court, law, supreme, property, local, government, district, schools, federal
+                </button>
+              </h2>
+              <div id="collapseSeven" class="accordion-collapse collapse" aria-labelledby="accordion-heading-7" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-7" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_7_graphic"></div>
+                </div>
+              </div><div id="topic_0_graphic"></div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-8" style="height: 30px;font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-8" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight" style="height: 30px;">
+                  sixty, overland, begun, tacoma, exclusively, carson, continuous, featured, huntington, wake
+                </button>
+              </h2>
+              <div id="collapseEight" class="accordion-collapse collapse" aria-labelledby="accordion-heading-8" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-8" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_8_graphic"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="accordion-heading-9" style="height: 30px;font-size: 1.4em;">
+                <button class="accordion-button collapsed" id="accordion-button-9" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine" style="height: 30px;">
+                  native, english, american, african, americans, century, language, european, german, culture
+                </button>
+              </h2>
+              <div id="collapseNine" class="accordion-collapse collapse" aria-labelledby="accordion-heading-9" data-bs-parent="#topicKeywordAccordion">
+                <div class="accordion-body" id="accordion-body-9" style="height: 300px;overflow-y: scroll;">
+                  <div id="topic_9_graphic"></div>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+        </div>
+      </div>
+
+
+      <div class="explanation_sliders">
+        <div id="slider_block">
+          
+          <div class="slider_entry" id="topic0_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_0_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_0_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic1_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_1_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_1_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic2_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_2_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_2_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic3_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_3_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_3_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic4_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_4_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_4_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic5_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_5_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_5_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic6_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_6_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_6_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic7_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_7_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_7_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic8_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_8_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_8_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+
+          <div class="slider_entry" id="topic9_slider_entry">
+            <input type="range" min="-100" max="100" value="0" class="slider" id="topic_9_slider" style="display: inline; width: 150px; height: 18px;"> 
+            <span id="topic_9_slide_dis" style="font-size: 1.2em;"> 0 </span>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+    
+    <!-- grid-layout for body of explaination tab -->
+
+  </div>
+
+
+
+
+
+</body>
+
+</html>

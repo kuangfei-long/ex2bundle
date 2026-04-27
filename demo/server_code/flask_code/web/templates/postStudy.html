@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  <script async src="{{ url_for('static', filename='postStudy.js') }}" type="module"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container" display:flex; flex-direction: column; justify-content: flex-start;
+    align-items: center; overflow-y: auto;>
+        <h3 style="padding-left: 15px; padding-right: 15px;">Post-Study Questionnaire</h3>
+        <p style="padding-left: 15px; padding-right: 15px; display: inline-block;">Please answer the following questions to the best of your
+            abilities. You must answer all questions.</p>
+        <div style="position: relative; display: flex;">
+            <div class="color-box-sudocu"></div>
+            <p style="padding-left: 30px; padding-right: 15px;">System U: Summarization tool with the option to modify relevant topic importance to tune the generated summary.</p>
+            <div class="hover_img">
+                <a href="#">
+                    <i class="fas fa-exclamation-circle" style="color: red; margin-right: 50; display: inline-block;"></i>
+                    <span>
+                        <img src="images/SuDoCu.png" height="100" />
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div style="position: relative; display: flex;">
+            <div class="color-box-sbert"></div>
+            <p style="padding-left: 30px; padding-right: 15px;">System V: Summarization tool that generates summaries without the need to modify relevant topic importance.</p>
+            <div class="hover_img">
+                <a href="#">
+                    <i class="fas fa-exclamation-circle" style="color: red; margin-right: 50; display: inline-block;"></i>
+                    <span>
+                        <img src="images/SBert.png" height="100" />
+                    </span>
+                </a>
+            </div>
+        </div>  
+        <div class="preContainer" id="pre_container">
+            <form class="needs-validation" novalidate id="demo_form">
+                <div class="form-group column">
+                    <label for="q1Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        1. What was your overall experience of searching for information using summaries?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q1Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option value="0">Very Poor</option>
+                        <option value="1">Poor</option>
+                        <option value="2">Average</option>
+                        <option value="3">Good</option>
+                        <option value="4">Excellent</option>
+                    </select>
+                    <div class="invalidFeedback" id="q1Feedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q2Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        2. Which tool generated better summaries?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q2Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q2Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q2Extension" style="display: none">
+                    <label for="q2ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" style="border-color: black;" id="q2ExtensionText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q2ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q3Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        3. Which tool did you find more useful?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q3Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q3Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q3Extension" style="display: none">
+                    <label for="q3ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" id="q3ExtensionText" style="border-color: black;" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q3ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q4Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        4. Which tool did you find easier to use?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q4Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q4Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q4Extension" style="display: none">
+                    <label for="q4ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" style="border-color: black;" id="q4ExtensionText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q4ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q5Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        5. Which tool helped you better in making a decision?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q5Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q5Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q5Extension" style="display: none">
+                    <label for="q5ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" style="border-color: black;" id="q5ExtensionText" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q5ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q6Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        6. Which tool did you find more flexible?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q6Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q6Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q6Extension" style="display: none">
+                    <label for="q6ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" id="q6ExtensionText" style="border-color: black;" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q6ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q7Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        7. Which tool did you find more comfortable to use?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q7Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q7Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q7Extension" style="display: none">
+                    <label for="q7ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" id="q7ExtensionText" style="border-color: black;" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q7ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q8Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        8. If you had to choose a tool to search for information from multiple documents/websites, which one would you choose?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q8Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>System U</option>
+                        <option>System V</option>
+                    </select>
+                    <div class="invalidFeedback" id="q8Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q8Extension" style="display: none">
+                    <label for="q8ExtensionText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>Why?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" id="q8ExtensionText" style="border-color: black;" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q8ExtensionFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q9Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>
+                        9. While creating example input summaries did you identify any interesting information that you had not previously thought about?
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12">
+                    <select class="form-select" id="q9Select" style="border-color: black;" required>
+                        <option value="">Pick an option</option>
+                        <option>Yes</option>
+                        <option>No</option>
+                    </select>
+                    <div class="invalidFeedback" id="q9Feedback"></div>
+                </div>
+
+                <div class="form-group column" id="q9YesResponse" style="display: none">
+                    <label for="q9YesText" class="col-lg-12 col-m-12 col-sm-12 col-form-label"><b>How did this help you in completing the task?</b></label>
+                    <div class="col-lg-12 col-m-12 col-sm-12">
+                        <input type="text" class="form-select" id="q9YesText" style="border-color: black;" placeholder="Write your response here" required>
+                    </div>
+                    <div class="invalidFeedback" id="q9YesFeedback"></div>
+                </div>
+
+                <div class="form-group column">
+                    <label for="q10Select" class="col-lg-12 col-m-12 col-sm-12 col-form-label" style="margin-bottom: 1rem;"><b>
+                        10. Other comments:
+                    </b></label>
+                </div>
+                <div class="col-lg-12 col-m-12 col-sm-12"  id="txtArea">
+                    <textarea id="q10Select" cols="110" rows="3" placeholder="Write your response here"></textarea>
+                </div>
+            </form>
+
+            <div style="display: flex; width: 100%; align-items: center; justify-content: center;">
+                <div id="endloading" style="display: none;">Saving Input. Please don't close the window.
+                    <img src="images/hg.gif" style="margin-left: 5px; margin-top:-5px; height:20px; height: 20px">
+                </div>
+                <div id="continue" title="Continue to Study"
+                    style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 200px; height: 30px; border-radius: 20px; border: solid thin lightgray; text-align: center; margin: 20px;">
+                    Continue <i class="fa fa-arrow-right" style="margin-left:10px" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

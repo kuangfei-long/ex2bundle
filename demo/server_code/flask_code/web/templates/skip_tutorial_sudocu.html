@@ -1,0 +1,35 @@
+{% extends "base-sudocu.html" %}
+
+{% block head %}
+  {{ super() }}
+  <script async src="{{ url_for('static', filename='tutorialVideo_sudocu.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container"
+    style="display:flex; flex-direction: column; justify-content: flex-start; align-items: center; overflow-y: auto;">
+
+        <p style="color:red; margin-top:20px"><span><i class="fa fa-play"></i></span>You can seek forward
+                and seek back the video on this page!</p>
+
+        <div id="vid_div" style="margin:2%;">
+            <video id="video" controls style="width: 100%; height:600px">
+                <source src="images/SuDoCu.mp4" type="video/mp4">
+            </video>
+        </div>
+
+        <div id="continue" title="Continue to study"
+            style="display: flex; flex-direction: row; justify-content: center; align-items: center; width: 300px; height: 30px; border-radius: 20px; border: solid thin lightgray; text-align: center; margin: 20px; visibility:hidden">
+            Continue to study <i class="fa fa-arrow-right" style="margin-left:10px" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#continue').click(function() {
+                location.href = './systemU'
+            });
+        });
+    </script>
+{% endblock %}

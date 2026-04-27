@@ -1,0 +1,263 @@
+{% extends "base-sudocu.html" %}
+
+
+{% block head %}
+  {{ super() }}
+  <script async src="{{ url_for('static', filename='scripts_sudocu.js') }}" type="module"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<!--    Summarizing Documents by Example-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> </h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body"> </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary">OK</button>
+        <button type="button" class="btn btn-primary" id="prim">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="loader_background"></div>
+  <div class="wrapper"> 
+    <div id="loader"></div>
+    <div id="wait" style="color: black">Please Wait.</div>
+
+    <div class="input">
+      <div class="section inputSection">
+        
+        <div class="mainHeaderWrapper">
+          <div class="mainHeaderSuDoCu">Input Your Example Summaries<span id="infoi-main"><i id="sumSelectorInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-html="true" data-bs-content="<p class='text-left'>Create example summaries by selecting a document from the drop-down menu below and clicking on sentences that are of interest to you. You can additionally search for specific topics using the search bar below. After selecting the sentences you want in your example summary, click submit summary to submit it to the system. You can later update any example summary by selecting the state from the drop-down menu again, selecting new or unselecting old sentences, and then clicking “Update Summary”."></i></span></div>
+
+        </div>
+        <div>
+          <select id="inputDocumentSelector" title="click to select a document" class="dropdown">
+            <option hidden>-- Select Document --</option>
+          </select>
+          <div class="search">
+            <input id="searchInput" type="text" class="searchTerm" title="search in the document"
+              placeholder="Type text to filter">
+          </div>
+        </div>
+        <div id="docContent"></div>
+
+        <div style="display: flex">
+          <span class="d-inline-block" id='subupButton' tabindex="0" data-bs-toggle="tooltip" title="Submit Summary" data-bs-trigger="hover" data-bs-placement="top">
+            <button id='submitSummary' tabindex="0" class="button-sudocu" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Selection Added">Submit Summary</button>
+          </span>
+  
+          <div class="warnMes2" style="display: none; margin-top: 10px;">
+            <i class="fas fa-exclamation-circle" id="warnMesCircle" style="color: red; margin-right: 50;"></i>
+            <h6 id="warnMesText" style="color: red; margin-left: 50;">
+              Please analyze your changes.
+            </h6>
+          </div>
+        </div>
+        <!-- <button id='button_learnSummary' tabindex="0" class="button-sudocu" role="button" type="button" data-bs-toggle="popover" data-bs-trigger="focus" data-bs-content="Learning Summarization" style="margin-left:30px;">Analyze Your Summaries</button> -->
+      </div>
+    </div>
+
+    <div class="example_col">
+
+      <div class="mainHeaderWrapper">
+        <div class="mainHeaderSuDoCu">Your Example Summaries<span id="infoi-main2"><i id="exSumInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-html="true" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-content="<p class='text-left'>The example summary you have created for any document can be viewed below by clicking on the button with the appropriate document title. Additionally, you can delete an example summary by selecting the red x icon on any of the provided examples. After creating a set of example summaries you are happy with, begin generating summaries for other documents by first selecting the “Analyze Your Summaries” button. This should be done whenever an example summary is updated or submitted." disabled></i></span></div>
+      </div>
+
+      <div class="filterWrapper"><div id="summaryWarn" style="color: #C00000;">No example summaries provided, please submit a summary.</div><div class="summaryStates"></div></div>
+
+      <div id="exampleWrapper"><div class="exampleSummaries"></div></div>      
+      
+      <button id='button_learnSummary' tabindex="0" class="button-sudocu" role="button" type="button" data-bs-toggle="tooltip" title="Analyze your summaries" data-bs-trigger="hover" data-bs-placement="top" style="margin-left:30px;">Analyze Your Summaries</button>
+    </div>
+    <!-- TOPIC RIGHT HAND SIDE -->
+    <div class="rightWrapper">
+      <div class="mainHeaderWrapper">
+        <div class="mainHeaderSuDoCu" id="mainHeaderTopic">Topic Importance
+            <span id="infoi-main3"><i id="PaQLInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-html="true" data-bs-content="<p class='text-left'>Each label and slider below corresponds to a topic automatically detected in the collection of documents. Each label contains 10 keywords that are associated with that particular topic. After submitting and analyzing your example summaries, these keywords will change to reflect those that are used in the example summaries you provide, with the keywords that are found in your examples appearing in blue. As you generate summaries for new states, keywords from these summaries will also be added to the topic labels in blue.<br/><br/>In addition to controlling the content of your generated summaries by creating examples that are relevant to your interests, each topic slider can be used to further fine-tune the content of your automatically generated summaries. This can be done by moving the sliders of relatively important topics (which you want more of in your summaries) to the right and less important topics (which you would like less of) to the left. After changing the sliders, select the “Apply Changes” button to generate a new automatic summary with the newly set relative topic importance." disabled></i>
+        </div>
+      </div>
+      <div class="topicImportanceWrapper">  
+        <div class="topicNamesAndSlider" id="topicNamesAndSlider0">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse0">
+            <button class="btn btn-primary" id="topic0_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample0" aria-expanded="false" aria-controls="collapseExample0" id="dropdownTopic0" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample0">
+              <div class="card card-body" id="collapse0"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic0_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_0_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider" id="topicNamesAndSlider1">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse1">
+            <button class="btn btn-primary" id="topic1_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample1" id="dropdownTopic1" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample1">
+              <div class="card card-body" id="collapse1"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic1_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_1_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider" id="topicNamesAndSlider2">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse2">
+            <button class="btn btn-primary" id="topic2_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2" id="dropdownTopic2" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample2">
+              <div class="card card-body" id="collapse2"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic2_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_2_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider" id="topicNamesAndSlider3">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse3">
+            <button class="btn btn-primary" id="topic3_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample3" id="dropdownTopic3" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample3">
+              <div class="card card-body" id="collapse3"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic3_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_3_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider" id="topicNamesAndSlider4">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse4">
+            <button class="btn btn-primary" id="topic4_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample4" id="dropdownTopic4" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample4">
+              <div class="card card-body" id="collapse4"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic4_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_4_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider" id="topicNamesAndSlider5">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse5">
+            <button class="btn btn-primary" id="topic5_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample5" aria-expanded="false" aria-controls="collapseExample5" id="dropdownTopic5" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample5">
+              <div class="card card-body" id="collapse5"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic5_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_5_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider"  id="topicNamesAndSlider6">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse6">
+            <button class="btn btn-primary" id="topic6_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample6" aria-expanded="false" aria-controls="collapseExample6" id="dropdownTopic6" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample6">
+              <div class="card card-body" id="collapse6"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic6_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_6_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider"  id="topicNamesAndSlider7">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse7">
+            <button class="btn btn-primary" id="topic7_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample7" aria-expanded="false" aria-controls="collapseExample7" id="dropdownTopic7" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample7">
+              <div class="card card-body" id="collapse7"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic7_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_7_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider"  id="topicNamesAndSlider8">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse8">
+            <button class="btn btn-primary" id="topic8_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample8" aria-expanded="false" aria-controls="collapseExample8" id="dropdownTopic8" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample8">
+              <div class="card card-body" id="collapse8"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic8_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_8_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+
+        <div class="topicNamesAndSlider"  id="topicNamesAndSlider9">
+          <div class="highlightAll"><button class="highlightAllButton"><i class="fas fa-highlighter"></i></button></div>
+          <div class="nameAndCollapse" id="nameAndCollapse9">
+            <button class="btn btn-primary" id="topic9_name" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample9" aria-expanded="false" aria-controls="collapseExample9" id="dropdownTopic9" value="btn1"> <span id="words"> </span> <span id="ellipsis"> &#8230</span></button> 
+            <div class="collapse" id="collapseExample9">
+              <div class="card card-body" id="collapse9"><span id="words"> </span></div>
+            </div>
+          </div>
+          <div class="slider_entry" id="topic9_slider_entry">
+            <input href="#" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="&#8592 Less Important More Important &#8594" data-bs-trigger="hover" type="range" min="-66" max="66" value="0" step="33" class="slider" id="topic_9_slider" style="display: inline; width: 135px; height: 10px;"> 
+          </div>
+        </div>
+      </div>
+      <div class="editButtons">
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Apply Changes" style="margin-top: 17px;" data-bs-trigger="hover">
+          <button class="btn btn-default" id="fafaApply" style="font-size:18px"> <i class="fa fa-save"></i></button>
+        </span>
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Undo Changes" style="margin-top: 17px;" data-bs-trigger="hover">
+          <button class="btn btn-default" id="fafaUndo" style="font-size:18px"> <i class="fa fa-undo"></i></button>
+        </span>
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Redo Changes" style="margin-top: 17px;" data-bs-trigger="hover">
+          <button class="btn btn-default" id="fafaRedo" style="font-size:18px"> <i class="fa fa-redo"></i></button>
+        </span>
+        <span class="d-inline-block" id="resetBut" tabindex="0" data-bs-toggle="tooltip" title="Reset Changes" style="margin-top: 17px;" data-bs-trigger="hover" data-bs-placement="left">
+          <button class="btn btn-default" id="fafaReset" style="font-size:18px"> <i class="fa fa-refresh"></i></button>
+        </span>
+      </div>
+    </div>
+
+    <div class="generatedSummarySection">
+      <div class="mainHeaderWrapper">
+        <div class="subHeader">Generated Summaries<span id="infoi-big"><i id="genSumInfoIcon" class="fas fa-info-circle" style="font-size:20px" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-placement="left" data-bs-html="true" data-bs-content="<p class='text-left'>Generate an automatic summary for a document by selecting it from the document drop-down menu below."></i></span></div>
+      </div>
+
+      <!-- <label for="outputDocument" style="width: 100%"></label> -->
+      <div class="OutputAndWarn">
+        <select id="outputDocumentSelector" title="click to display a learned summary" class="dropdown">
+          <option hidden value="0">-- Select Document --</option>
+        </select>
+        <div class="warnMes" style="display: none">
+          <i class="fas fa-exclamation-circle" id="warnMesCircle" style="color: red; margin-right: 50;"></i>
+          <h6 id="warnMesText" style="color: red; margin-left: 50;">
+            Apply your new changes by clicking <span id="bgwarnSave"><span><i class="fa fa-save" id="warnSave"></i></span></span> to see the updated summary and re-enable the State dropdown menu.
+          </h6>
+        </div>
+      </div>
+      <div id="generated"></div>    
+    </div>
+    
+  </div>  <!-- end of wrapper object  -->
+
+  <div>
+    <button class="button-sudocu" id='button_completeTask' type="button" disabled>Finish Task</button>
+  </div>
+</div>
+{% endblock %}

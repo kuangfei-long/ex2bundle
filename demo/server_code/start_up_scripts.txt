@@ -1,0 +1,4 @@
+export PYTHONPATH=$PYTHONPATH:/home/oscar/Research/SuDocu/Source/server_code/Models
+export PYTHONPATH=$PYTHONPATH:/home/oscar/Research/SuDocu/Source/server_code/utils
+
+python -c "import sys; print(sys.path)"
