@@ -216,3 +216,10 @@ See `demo/README.md`. Run with `python -m flask_code.app` from
 by manually pasting prompts into the GPT-4o web interface — the prompts
 themselves are in `docs/chatgpt_prompts.md` for reproducibility, but no API
 runner is included.
+
+---
+
+## Citation
+
+If you use this software or build on the algorithm, please cite the paper.
+See [CITATION.cff](CITATION.cff) for the full author list and citation entry.
