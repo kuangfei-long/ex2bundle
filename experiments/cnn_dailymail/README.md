@@ -48,7 +48,7 @@ by pointing `--users_path` at the folder.
 
 ## Pre-shipped artifacts
 
-We ship Oscar's already-processed copies under `data/cnn_dailymail/`:
+We ship the already-processed copies under `data/cnn_dailymail/`:
 
 ```
 data/cnn_dailymail/

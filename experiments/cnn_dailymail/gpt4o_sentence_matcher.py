@@ -16,8 +16,7 @@ asked to:
   Q3. Pick which sentences best support the highlight.
   Q4. Return the IDs of those sentences.
 
-Output: ``all_info_<split>.json`` matching the schema produced by Oscar's
-``GPT_ACL.py``:
+Output: ``all_info_<split>.json`` with the schema:
 
   [{"id": ..., "name": "CNNDM_<i>",
     "original_text": ..., "original_summary": ...,

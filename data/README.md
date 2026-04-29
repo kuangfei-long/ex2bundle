@@ -26,11 +26,11 @@ data/
 Copy from the source branches:
 ```bash
 # data_ctm.csv — lives in:
-#   Source-*/SubSume_Experiment_(Oscar)/user_study_code/server_code/flask_code/data_ctm.csv
+#   Source/user_study_code/server_code/flask_code/data_ctm.csv
 # shared_docs/  — lives in:
-#   Source-*/SubSume_Experiment_(Oscar)/user_study_code/server_code/flask_code/data/
+#   Source/user_study_code/server_code/flask_code/data/
 # user_summary_jsons/ — lives in:
-#   Source-*/SubSume_Experiment_(Oscar)/SubSumE_Data/user_summary_jsons/
+#   Source/SubSumE_Data/user_summary_jsons/
 ```
 
 ### Synthetic data (Figures 13, 14)

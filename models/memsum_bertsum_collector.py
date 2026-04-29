@@ -2,10 +2,10 @@
 MemSum / BertSumExt data collector (Paper Section 5.1.3).
 
 The paper compares against MemSum [15] and BertSumExt [27], neither of which
-natively supports example-driven extraction. Following Oscar's protocol, we:
+natively supports example-driven extraction. We adapt them to our setting by:
 
-  1. Pre-filter the target document with the same SBERT prefilter Ex2Bundle uses.
-  2. Pass the pre-filtered sentences to MemSum / BertSumExt for extractive
+  1. Pre-filtering the target document with the same SBERT prefilter Ex2Bundle uses.
+  2. Passing the pre-filtered sentences to MemSum / BertSumExt for extractive
      summarization, treating those models as black boxes.
 
 This file only implements step (1): given a target document and example

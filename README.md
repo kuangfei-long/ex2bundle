@@ -1,16 +1,23 @@
 # Ex2Bundle
 
-> **Ex2Bundle: Intent-Aware Bundle Retrieval via Example-Guided PaQL**
+> **Example-Driven Intent Synthesis for Constrained Data Bundle Retrieval:
+> Focused Text Snippet Extraction and Beyond**
 >
-> *[TODO: authors]* — *[TODO: affiliations]*
+> Whanhee Cho¹, Kuangfei Long², Mahmood Jasim³, Matteo Brucato⁴,
+> Alexandra Meliou⁵, Peter J. Haas⁵, Anna Fariha¹
 >
-> ACM SIGMOD 2026 *(under review)*
+> ¹University of Utah · ²Boston University · ³Louisiana State University ·
+> ⁴OSM Data · ⁵UMass Amherst
+>
+> Submitted to **VLDB 2027**
 >
 > 📄 **Paper**: [TODO: arxiv / preprint link]
 
-This repository is the official artifact for the paper. It contains the full
-implementation, all baselines, every experiment script we use to produce the
-figures and tables, and the deployed Flask demo from the user study.
+This repository is the official artifact for the paper. Its purpose is the
+**reproducibility** of every experiment presented in the paper: bound
+synthesis, bound relaxation, the slider interface, the quality function, the
+package-query execution, all baselines (Top-k SBERT, SuDocu, MemSum,
+BertSumExt), and the deployed Flask demo used in the user study.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -204,21 +211,6 @@ See `demo/README.md`. Run with `python -m flask_code.app` from
 | 5.6 RQ3 Figure 13 | `experiments/run_figure13_relaxation.py` |
 | 5.7 RQ4 Figure 14 | `experiments/run_figure14_scalability.py` + 3 strategies in `generate_synthetic_data.py` |
 | 6 User study | `demo/` |
-
----
-
-## Design notes
-
-**ConflictRefiner enabled by default.** In Oscar's original eval framework
-this was commented out; the deployed Flask server had it on. This repo
-matches the paper description (Section 4.1.2) — always on for Ex2Bundle,
-with a range heuristic fallback if CPLEX fails.
-
-**Single branch.** All paper artifacts on `main`. No experiment-specific
-branches.
-
-**Data shipped.** SubSumE CSVs, SBERT embeddings, and CNN/DM pre-processed
-JSONs are committed in `data/`. Only TPC-H DB has to be built locally.
 
 **ChatGPT-4o automation deliberately omitted.** Tables 10/11 were generated
 by manually pasting prompts into the GPT-4o web interface — the prompts
