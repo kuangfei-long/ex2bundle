@@ -11,7 +11,7 @@
 >
 > Submitted to **VLDB 2027**
 >
-> 📄 **Technical Report**: [Link]([https://afariha.github.io/papers/ex2bundle_tech_rep.pdf](http://users.cs.utah.edu/~afariha/ex2bundle_tech_rep.pdf))
+> 📄 **Technical Report**: [Link](http://users.cs.utah.edu/~afariha/ex2bundle_tech_rep.pdf)
 
 This repository is the official artifact for the paper. Its purpose is the
 **reproducibility** of every experiment presented in the paper: bound
