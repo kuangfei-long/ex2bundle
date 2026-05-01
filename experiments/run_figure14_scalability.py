@@ -1,10 +1,10 @@
 """
-RQ4: Scalability — Figure 14.
+RQ4: Scalability analysis — Paper §5.6.
 
 Reproduces the three-panel × three-curve plot from the paper:
 
   Panels:    (a) Learning time   (b) Retrieval time   (c) Total time
-  Curves:    single-feature, random, multi-feature  (sampling strategies)
+  Curves:    single-topic, random, multi-topic  (sampling strategies)
 
 Workflow
 --------

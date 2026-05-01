@@ -1,15 +1,16 @@
 """
-Pre-processing: generate synthetic example summaries for Figs 13 & 14.
+Pre-processing: generate synthetic example snippets for the relaxation
+analysis (§5.5) and scalability analysis (§5.6) experiments.
 
-Three sampling strategies (Paper Section 5.7):
+Three sampling strategies (Paper §5.6):
 
   --strategy single   Top-k sentences by ONE topic's score
-                      (paper: "single-feature sampling")
+                      (paper: "single-topic" sampling)
   --strategy random   k uniformly random sentences from the document
-                      (paper: "random sampling")
+                      (paper: "random" sampling)
   --strategy multi    Iteratively pick a random topic, take top-5 sentences,
                       repeat until k sentences are collected
-                      (paper: "multi-feature sampling")
+                      (paper: "multi-topic" sampling)
 
 Output structure
 ----------------
@@ -127,8 +128,8 @@ def main():
         elif strategy == "random":
             out_dir = os.path.join(args.output_dir, "random")
             os.makedirs(out_dir, exist_ok=True)
-            # Mirror single-feature folder layout (one "topic" subfolder) so the
-            # synthetic_runner can iterate uniformly.
+            # Mirror the single-topic folder layout (one "topic" subfolder) so
+            # the synthetic_runner can iterate uniformly.
             sub = os.path.join(out_dir, "topic0")
             os.makedirs(sub, exist_ok=True)
             for k in range(args.step, args.max_len + 1, args.step):

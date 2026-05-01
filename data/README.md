@@ -8,7 +8,7 @@ any experiment.
 
 ## Required files
 
-### SubSumE experiments (Figures 9, 12, 13, 14)
+### SubSumE experiments (§5.3 retrieval-based FTSE, §5.5 relaxation, §5.6 scalability, and the tech-report quality-function ablation)
 
 ```
 data/
@@ -33,7 +33,7 @@ Copy from the source branches:
 #   Source/SubSumE_Data/user_summary_jsons/
 ```
 
-### Synthetic data (Figures 13, 14)
+### Synthetic data (§5.5 relaxation, §5.6 scalability)
 
 Generate with:
 ```bash
@@ -43,7 +43,7 @@ python experiments/generate_synthetic_data.py \
     --output_dir  data/synthetic_data_collection/
 ```
 
-### TPC-H (Table 8)
+### TPC-H (§5.2 RQ1 constraint satisfaction)
 
 Build with the [TPC-H dbgen](https://www.tpc.org/tpch/) tool, then:
 ```sql

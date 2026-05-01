@@ -1,15 +1,19 @@
 """
-RQ2: Figure 9 — full baseline comparison on SubSumE.
+RQ2: Retrieval-based FTSE comparison on SubSumE (Paper §5.3).
 
-Runs ROUGE / SBERT / topic-score-diff comparison across:
+Runs ROUGE-1/2/L / SBERT-based semantic similarity (SS) / per-query runtime
+across:
   - Ex2Bundle    (our system)
-  - Top-k SBERT  (sBert baseline, paper Section 5.1.3)
-  - SuDocu       (LDA + simple fixed-step relaxation, [11])
-  - MemSum / BertSumExt — these baselines need external inference and are NOT
+  - Top-k SBERT  (Top-k baseline, paper §5.1)
+  - SuDocu       (LDA + simple fixed-step relaxation, prior system)
+  - PreSumm / MemSum — these baselines need external inference and are NOT
     run here. Use ``collect_memsum_bertsum_data.py`` to produce their input
     files, run the external models on those files, then evaluate the resulting
-    summaries with the same ROUGE/SBERT functions in ``utils/evaluation.py``.
-  - ChatGPT-4o was queried manually (Tables 10/11) — no script.
+    snippets with the same ROUGE/SBERT functions in ``utils/evaluation.py``.
+    (PreSumm is the Liu 2019 extractive summarizer; the BertSumExt
+    implementation is the specific extractive variant used.)
+  - ChatGPT-4o is evaluated separately in §5.4 — no script (manual queries
+    via the GPT-4o web interface, see ``docs/chatgpt_prompts.md``).
 
 Usage
 -----

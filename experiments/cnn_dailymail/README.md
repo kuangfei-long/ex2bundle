@@ -1,8 +1,13 @@
 # CNN/DailyMail pipeline
 
-Used for **Table 11** (Section 5.4 generic-intent retrieval comparison with
-ChatGPT-4o) and as an alternative dataset for the **Figure 14** scalability
-analysis (Section 5.7).
+Used for the **§5.4 generic-intent retrieval comparison with ChatGPT-4o**
+across four news categories (Politics, Crime, Sports, Lifestyle), and as an
+alternative dataset for the **§5.6 scalability analysis**.
+
+The paper draws 100 articles from the ACL2020 split (avg 39 sentences per
+article, median 35, range 7–151). Within each category, 5 articles are used
+as user examples and 3 as target — matching the train/test protocol used
+for SubSumE.
 
 ## Workflow
 
@@ -31,6 +36,10 @@ python experiments/cnn_dailymail/preprocess.py \
     --max_articles 200
 ```
 
+We pre-process a pool of 200 articles; the paper's §5.4 comparison uses 100
+of them (a fixed sub-sample drawn category-by-category from the ACL2020
+split).
+
 ### 2. GPT-4o reverse matching (highlight → article sentences)
 Requires `OPENAI_API_KEY` in env. Costs depend on `--num_lines`.
 
@@ -52,7 +61,7 @@ We ship the already-processed copies under `data/cnn_dailymail/`:
 
 ```
 data/cnn_dailymail/
-├── raw_json/              # 200 pre-tokenized article JSONs
+├── raw_json/              # 200 pre-tokenized article JSONs (paper uses 100)
 ├── mail_id.txt            # corresponding article IDs
 └── ACL2020_data/
     └── all_info/

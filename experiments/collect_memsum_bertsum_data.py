@@ -1,19 +1,19 @@
 """
-Generate input files for MemSum and BertSumExt baselines (Section 5.1.3).
+Generate input files for PreSumm and MemSum baselines (Paper §5.1).
 
 For each (intent, target_doc) pair in SubSumE, runs the SBERT pre-filter and
 writes:
 
   Results/MemSumBertSumData/
-  ├── bertsumex/                                # BertSumExt input format
+  ├── bertsumex/                                # PreSumm (BertSumExt) input format
   │   └── ex_<i>_pool_<p>_trial_<t>.story
   ├── memsum_data_trail_<t>.json                # MemSum input format
   │     [{"text": [...], "summary": [...]}, ...]
   └── used_examples_trail_<t>.json              # Which examples were drawn
 
-After running this, feed the .story files to BertSumExt and the .json file to
-MemSum to obtain their summaries, then evaluate them with the same ROUGE / SBERT
-metrics used elsewhere.
+After running this, feed the .story files to PreSumm (BertSumExt) and the
+.json file to MemSum to obtain their snippets, then evaluate them with the
+same ROUGE / SBERT metrics used elsewhere.
 
 Usage
 -----
