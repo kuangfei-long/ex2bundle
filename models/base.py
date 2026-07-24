@@ -52,8 +52,14 @@ class SuDocuBase(Model):
             n += float(len([int(s) for s in ex["sentence_ids"]]))
         return n / len(example_summaires)
 
-    def get_bounds(self, example_summaires):
+    def get_bounds(self, example_summaires, bound_pad=0.1):
         """Bound synthesis, Paper Section 4.1.1.
+
+        `bound_pad` controls the padding around the example min/max:
+          lb_j = min_j * (1 - bound_pad),  ub_j = max_j * (1 + bound_pad).
+        The paper default is 0.1 (±10%). A NEGATIVE value tightens the bounds
+        inward, which makes the ILP infeasible more often and thus exercises
+        the relaxation algorithms harder (Item 6 stress-test).
 
         Returns
           bounds : np.ndarray, shape (nTopics, 2). bounds[j] = (lb_j, ub_j)
@@ -78,8 +84,8 @@ class SuDocuBase(Model):
         bounds = np.zeros((self.nTopics, 2))
         eps = 1e-4
         for i in range(len(topic_min)):
-            bounds[i, 0] = round(topic_min[i] * 0.9 - eps, 4)
-            bounds[i, 1] = round(topic_max[i] * 1.1 + eps, 4)
+            bounds[i, 0] = round(topic_min[i] * (1.0 - bound_pad) - eps, 4)
+            bounds[i, 1] = round(topic_max[i] * (1.0 + bound_pad) + eps, 4)
 
         assert bounds.shape == (self.nTopics, 2), "bounds shape mismatch"
         return bounds, avg_len

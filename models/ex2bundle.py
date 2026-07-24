@@ -24,6 +24,13 @@ import numpy as np
 import docplex.mp.model as cpx
 import docplex.cp.parameters as params
 from docplex.mp.conflict_refiner import ConflictRefiner
+from docplex.mp.relaxer import Relaxer
+
+# Supported bound-relaxation strategies (Revision Item 6, "bound direction").
+#   symmetric   -- current algorithm: widen BOTH sides of every violated topic.
+#   directional -- IIS identifies the violated side; widen only that side.
+#   feasopt     -- one-shot CPLEX FeasOpt (Relaxer): minimal total relaxation.
+VALID_RELAXATION_MODES = ("symmetric", "directional", "feasopt")
 
 from models.base import SuDocuBase
 from utils.filtering import Sentence_Prefilter_Wrapper
@@ -35,7 +42,7 @@ class Ex2Bundle(SuDocuBase):
 
     def __init__(self, data_path, shared_docs_path, nTopics, num_examples, is_generative,
                  max_solvs=50, length_modifier=0.25, objective_mode="ALL",
-                 use_conflict_refiner=True):
+                 use_conflict_refiner=True, relaxation_mode="symmetric", bound_pad=0.1):
         super().__init__(data_path, shared_docs_path, nTopics, num_examples, is_generative)
 
         # Quiet CPLEX presolve
@@ -50,12 +57,27 @@ class Ex2Bundle(SuDocuBase):
         )
         self.objective_mode = objective_mode
         self.use_conflict_refiner = use_conflict_refiner
+        assert relaxation_mode in VALID_RELAXATION_MODES, (
+            f"relaxation_mode must be one of {VALID_RELAXATION_MODES}; got {relaxation_mode}"
+        )
+        self.relaxation_mode = relaxation_mode
+        self.bound_pad = bound_pad
 
         self.filter_obj = Sentence_Prefilter_Wrapper(shared_docs_path, nTopics)
         self.obj_func_obj = Objective_Function_Wrapper(shared_docs_path, nTopics)
 
         self.utilized_bounds = None
         self.slider_values = None
+
+        # Item-6 instrumentation, refreshed on every get_predicted_summary call.
+        # (Exposed on the instance because the 6-tuple return contract is shared
+        #  with the Fig 13/14 and RQ2 runners and must stay stable.)
+        self.initial_bounds = None       # bounds right after synthesis, pre-relaxation
+        self.last_relax_freq = 0         # number of relaxation rounds (feasopt: 1)
+        self.last_num_relaxed = 0        # number of distinct topics relaxed
+        self.last_relax_magnitude = 0.0  # sum |relaxed_rhs - initial_rhs| over topics
+        self.last_objective = None       # final ILP objective (merit score) of the returned bundle
+        self.last_selected_ids = []      # sentence ids in the returned bundle
 
     def get_predicted_summary(self, target_doc, example_summaries, bounds=None):
         max_solv_count = 50
@@ -64,12 +86,14 @@ class Ex2Bundle(SuDocuBase):
 
         # 1. Bound synthesis (or accept user-supplied bounds)
         if bounds is None:
-            bounds, avg_len = self.get_bounds(example_summaries)
+            bounds, avg_len = self.get_bounds(example_summaries, bound_pad=self.bound_pad)
             bounds = np.array(bounds)
         else:
             avg_len = self.get_avg_summaries_length(example_summaries)
             bounds = np.array(bounds)
         assert len(bounds) == self.nTopics
+        bounds = bounds.astype(float)
+        self.initial_bounds = bounds.copy()
 
         # 2. Build candidate pool via SBERT prefiltering
         ex_embedding = self.obj_func_obj.get_ex_embedding(example_summaries)
@@ -104,75 +128,84 @@ class Ex2Bundle(SuDocuBase):
             bs, tfidf, lpr, ts, mode=self.objective_mode
         )
 
-        # 4. Build & iteratively solve the ILP
+        # 4. Build & solve the ILP under the selected relaxation strategy.
         status = "none"
         solv_ctr = 0
         opt_model = None
         package_vars = None
         learning_time = 0.0
+        ilp_solve_time = 0.0
+        relax_directional = []  # list of (topic_idx, "min"|"max") for directional mode
 
-        while status != 'Optimal' and not exceeded:
-            # Exponential step multiplier r_m (Section 4.1.2).
-            step_ctr = max(int(solv_ctr / 10.0), 1)
-            step_mult = max(int(np.exp(step_ctr * 0.5)), 1)
-
-            if solv_ctr < 1:
-                opt_model = cpx.Model(name="Ex2Bundle_PaQL", log_output=False, cts_by_name=True)
-                package_vars = opt_model.integer_var_dict(sentence_ids, lb=0, ub=1, name="s")
-
-                for j, topic in enumerate(topic_scores):
-                    opt_model.add_constraint(
-                        ct=opt_model.sum(topic[i] * package_vars[sid]
-                                         for i, sid in enumerate(sentence_ids)) >= bounds[j][0],
-                        ctname="constraint_min_topic{0}".format(j),
-                    )
-                    opt_model.add_constraint(
-                        ct=opt_model.sum(topic[i] * package_vars[sid]
-                                         for i, sid in enumerate(sentence_ids)) <= bounds[j][1],
-                        ctname="constraint_max_topic{0}".format(j),
-                    )
-
-                opt_model.add_constraint(
-                    ct=opt_model.sum(package_vars) >= avg_len - avg_len_step,
-                    ctname="constraint_min_len",
-                )
-                opt_model.add_constraint(
-                    ct=opt_model.sum(package_vars) <= avg_len + avg_len_step,
-                    ctname="constraint_max_len",
-                )
-
-                objective = opt_model.sum(
-                    combined_score[i] * package_vars[sid]
-                    for i, sid in enumerate(sentence_ids)
-                )
-                opt_model.maximize(objective)
-            else:
-                self._relax_violated_bounds(
-                    opt_model, bounds, step_sizes, relax_topics, solv_ctr, step_mult
-                )
-
+        if self.relaxation_mode == "feasopt":
+            # One-shot CPLEX FeasOpt: build once, and if infeasible let the
+            # Relaxer find the minimal total bound relaxation (Item 6).
+            opt_model, package_vars = self._build_base_model(
+                sentence_ids, topic_scores, bounds, combined_score, avg_len, avg_len_step
+            )
             learning_time = time.time() - start_learn
             ilp_start = time.time()
             opt_model.parameters.timelimit.set(60)
             solu = opt_model.solve(log_output=False)
+            if solu is None:
+                solu, bounds, relax_freq, relax_topics = self._feasopt_relax(opt_model, bounds)
             ilp_solve_time = time.time() - ilp_start
+            exceeded = solu is None
+        else:
+            while status != 'Optimal' and not exceeded:
+                # Exponential step multiplier r_m (Section 4.1.2).
+                step_ctr = max(int(solv_ctr / 10.0), 1)
+                step_mult = max(int(np.exp(step_ctr * 0.5)), 1)
 
-            solv_ctr += 1
-            status = "Optimal" if solu is not None else "none"
+                if solv_ctr < 1:
+                    opt_model, package_vars = self._build_base_model(
+                        sentence_ids, topic_scores, bounds, combined_score, avg_len, avg_len_step
+                    )
+                elif self.relaxation_mode == "directional":
+                    self._relax_directional(
+                        opt_model, bounds, step_sizes, relax_directional, solv_ctr, step_mult
+                    )
+                else:  # symmetric (current algorithm)
+                    self._relax_violated_bounds(
+                        opt_model, bounds, step_sizes, relax_topics, solv_ctr, step_mult
+                    )
 
-            if status == "none":
-                relax_topics, round_relaxed = self._identify_violated_constraints(
-                    opt_model, bounds
-                )
-                if round_relaxed:
-                    relax_freq += 1
+                learning_time = time.time() - start_learn
+                ilp_start = time.time()
+                opt_model.parameters.timelimit.set(60)
+                solu = opt_model.solve(log_output=False)
+                ilp_solve_time = time.time() - ilp_start
 
-            if solv_ctr > max_solv_count:
-                exceeded = True
+                solv_ctr += 1
+                status = "Optimal" if solu is not None else "none"
 
-        self.utilized_bounds = bounds
+                if status == "none":
+                    if self.relaxation_mode == "directional":
+                        relax_directional, relax_topics, round_relaxed = \
+                            self._identify_violated_directional(opt_model, bounds)
+                    else:
+                        relax_topics, round_relaxed = self._identify_violated_constraints(
+                            opt_model, bounds
+                        )
+                    if round_relaxed:
+                        relax_freq += 1
+
+                if solv_ctr > max_solv_count:
+                    exceeded = True
+
+        self.utilized_bounds = np.array(bounds, dtype=float)
+        self.last_relax_freq = relax_freq
+        self.last_num_relaxed = (
+            0 if (isinstance(relax_topics, np.ndarray) and np.all(relax_topics == 0))
+            else len(relax_topics)
+        )
+        self.last_relax_magnitude = float(
+            np.sum(np.abs(self.utilized_bounds - self.initial_bounds))
+        )
 
         if exceeded:
+            self.last_objective = None
+            self.last_selected_ids = []
             return ("def_sum --------------- error state", learning_time, ilp_solve_time, 0,
                     relax_freq, len(relax_topics))
 
@@ -184,6 +217,15 @@ class Ex2Bundle(SuDocuBase):
             summary_indices.append(sid)
             summary.append(str(sub_df[sub_df['sid'] == sid]['sentence'].to_numpy()[0]))
 
+        # Item-6 (Matteo): record the returned bundle and its merit objective so
+        # we can check whether solutions/objectives differ across strategies even
+        # when the relaxed bounds differ substantially.
+        try:
+            self.last_objective = float(solu.objective_value)
+        except Exception:
+            self.last_objective = None
+        self.last_selected_ids = sorted(summary_indices)
+
         return (
             " ".join(summary),
             learning_time,
@@ -192,6 +234,57 @@ class Ex2Bundle(SuDocuBase):
             relax_freq,
             0 if (isinstance(relax_topics, np.ndarray) and np.all(relax_topics == 0)) else len(relax_topics),
         )
+
+    # -- ILP construction ------------------------------------------------------
+
+    def _build_base_model(self, sentence_ids, topic_scores, bounds,
+                          combined_score, avg_len, avg_len_step):
+        """Build the initial package-query ILP (topic + length constraints)."""
+        opt_model = cpx.Model(name="Ex2Bundle_PaQL", log_output=False, cts_by_name=True)
+        package_vars = opt_model.integer_var_dict(sentence_ids, lb=0, ub=1, name="s")
+
+        for j, topic in enumerate(topic_scores):
+            opt_model.add_constraint(
+                ct=opt_model.sum(topic[i] * package_vars[sid]
+                                 for i, sid in enumerate(sentence_ids)) >= bounds[j][0],
+                ctname="constraint_min_topic{0}".format(j),
+            )
+            opt_model.add_constraint(
+                ct=opt_model.sum(topic[i] * package_vars[sid]
+                                 for i, sid in enumerate(sentence_ids)) <= bounds[j][1],
+                ctname="constraint_max_topic{0}".format(j),
+            )
+
+        opt_model.add_constraint(
+            ct=opt_model.sum(package_vars) >= avg_len - avg_len_step,
+            ctname="constraint_min_len",
+        )
+        opt_model.add_constraint(
+            ct=opt_model.sum(package_vars) <= avg_len + avg_len_step,
+            ctname="constraint_max_len",
+        )
+
+        objective = opt_model.sum(
+            combined_score[i] * package_vars[sid] for i, sid in enumerate(sentence_ids)
+        )
+        opt_model.maximize(objective)
+        return opt_model, package_vars
+
+    @staticmethod
+    def _parse_topic_constraint(name):
+        """('min'|'max', j) for a topic-constraint name, else None.
+
+        Accepts either a bare ctname ('constraint_min_topic3', from
+        ConflictRefiner) or a full 'name: expr' string (from Relaxer).
+        """
+        key = str(name).split(":")[0].strip()
+        for side, prefix in (("min", "constraint_min_topic"), ("max", "constraint_max_topic")):
+            if key.startswith(prefix):
+                try:
+                    return side, int(key[len(prefix):])
+                except ValueError:
+                    return None
+        return None
 
     # -- Bound relaxation (Paper Section 4.1.2) --------------------------------
 
@@ -247,3 +340,100 @@ class Ex2Bundle(SuDocuBase):
 
             model.get_constraint_by_name("constraint_min_topic{0}".format(j)).rhs = bounds[j][0]
             model.get_constraint_by_name("constraint_max_topic{0}".format(j)).rhs = bounds[j][1]
+
+    # -- Directional relaxation (Item 6: IIS + directional) --------------------
+
+    def _identify_violated_directional(self, opt_model, bounds):
+        """Like _identify_violated_constraints, but keeps the violated SIDE.
+
+        Returns (directional_pairs, topic_indices, round_relaxed) where
+        directional_pairs is a list of (topic_idx, 'min'|'max').
+        """
+        directional = []
+        topics = set()
+        round_relaxed = False
+
+        if self.use_conflict_refiner:
+            try:
+                cr = ConflictRefiner()
+                cr_res = cr.refine_conflict(opt_model, display=False)
+                for conflict in cr_res.iter_conflicts():
+                    parsed = self._parse_topic_constraint(conflict[0])
+                    if parsed is None:
+                        continue
+                    side, j = parsed
+                    directional.append((j, side))
+                    topics.add(j)
+                    round_relaxed = True
+            except Exception:
+                pass
+
+        if not directional:
+            # Fallback: no direction available, widen both sides of the
+            # below-average-width topics (degenerates to symmetric).
+            bound_diffs = np.abs(np.array(bounds)[:, 1:2] - np.array(bounds)[:, 0:1]).squeeze()
+            avg_diff = np.mean(bound_diffs)
+            for i in range(self.nTopics):
+                if np.abs(bound_diffs[i]) < avg_diff:
+                    directional.extend([(i, "min"), (i, "max")])
+                    topics.add(i)
+                    round_relaxed = True
+
+        return directional, list(topics), round_relaxed
+
+    def _relax_directional(self, model, bounds, step_sizes, relax_directional, solv_ctr, step_mult):
+        """Widen ONLY the violated side of each flagged constraint.
+
+        Contrast with _relax_violated_bounds, which widens both sides.
+        """
+        for (j, side) in relax_directional:
+            if solv_ctr <= 0:
+                continue
+            if side == "min":
+                lb_new = bounds[j][0] - step_mult * step_sizes[j]
+                bounds[j][0] = lb_new if lb_new > 0 else 0.0
+            else:  # "max"
+                bounds[j][1] = bounds[j][1] + step_mult * step_sizes[j]
+
+        for j in range(self.nTopics):
+            model.get_constraint_by_name("constraint_min_topic{0}".format(j)).rhs = bounds[j][0]
+            model.get_constraint_by_name("constraint_max_topic{0}".format(j)).rhs = bounds[j][1]
+
+    # -- FeasOpt relaxation (Item 6: CPLEX Relaxer) ----------------------------
+
+    def _feasopt_relax(self, opt_model, bounds):
+        """One-shot CPLEX FeasOpt: minimal total relaxation to feasibility.
+
+        Reads each topic constraint's relaxation amount back into `bounds`
+        (min constraints move down, max constraints move up).
+        Returns (solution, relaxed_bounds, relax_freq, relaxed_topic_indices).
+        """
+        bounds = np.array(bounds, dtype=float)
+        try:
+            relaxer = Relaxer()
+            solu = relaxer.relax(opt_model)
+        except Exception:
+            return None, bounds, 0, []
+        if solu is None:
+            return None, bounds, 0, []
+
+        # CPLEX reports the relaxation as a SIGNED delta to add to the RHS
+        # (negative when loosening a >= min bound, positive for a <= max bound).
+        relaxed_topics = set()
+        for ct, amount in relaxer.iter_relaxations():
+            if amount == 0:
+                continue
+            parsed = self._parse_topic_constraint(getattr(ct, "name", None) or ct)
+            if parsed is None:
+                continue
+            side, j = parsed
+            if side == "min":
+                lb_new = bounds[j][0] + amount
+                bounds[j][0] = lb_new if lb_new > 0 else 0.0
+            else:  # "max"
+                bounds[j][1] = bounds[j][1] + amount
+            relaxed_topics.add(j)
+
+        # relax_freq = 1 relaxation "round" if anything was relaxed.
+        relax_freq = 1 if relaxed_topics else 0
+        return solu, bounds, relax_freq, list(relaxed_topics)
