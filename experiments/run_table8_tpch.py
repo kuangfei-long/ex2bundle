@@ -14,19 +14,11 @@ Metrics:
 
 Prerequisites
 -------------
-Build tpch.db from the TPC-H dbgen tool, then create the SupplierFeatures
-view by running:
-
-    CREATE TABLE SupplierFeatures AS
-    SELECT
-        s_suppkey   AS supplier_id,
-        (1.0 - s_acctbal / 10000.0) AS price_score,
-        1.0                          AS availability_score,
-        CASE WHEN n.n_regionkey = 1 THEN 1.0 ELSE 0.0 END AS region_america,
-        CASE WHEN n.n_regionkey = 2 THEN 1.0 ELSE 0.0 END AS region_europe,
-        (s_acctbal / 10000.0)        AS balance_score
-    FROM supplier s
-    JOIN nation  n ON s.s_nationkey = n.n_nationkey;
+A ready-to-use `data/tpch.db` (scale-factor 0.01: 100 suppliers) ships with the
+repo. It exposes the `SupplierFeatures` view this script reads. The full schema
+— base tables plus the feature-view definitions — is documented in
+`data/tpch_schema.sql`, which also explains how to regenerate the DB from
+freshly generated TPC-H dbgen tables.
 
 Usage
 -----

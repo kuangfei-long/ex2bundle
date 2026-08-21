@@ -92,8 +92,8 @@ CPLEX (via `docplex` + `cplex` Python packages) is required for the ILP.
 ### 2. Set up data
 
 See `data/README.md` for SubSumE / TPC-H / CNN-DM data setup. The SubSumE
-data, CNN/DailyMail pre-processed articles, and shared docs are all already
-in this repo (post-migration). Only the TPC-H DB needs to be built locally.
+data, CNN/DailyMail pre-processed articles, shared docs, and the TPC-H database
+(`data/tpch.db`) are all already in this repo (post-migration).
 
 ---
 

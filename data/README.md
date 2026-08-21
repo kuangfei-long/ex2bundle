@@ -45,19 +45,18 @@ python experiments/generate_synthetic_data.py \
 
 ### TPC-H (§5.2 RQ1 constraint satisfaction)
 
-Build with the [TPC-H dbgen](https://www.tpc.org/tpch/) tool, then:
-```sql
--- Run in your SQLite shell after `sqlite3 data/tpch.db`:
-CREATE TABLE SupplierFeatures AS
-SELECT
-    s.s_suppkey   AS supplier_id,
-    (1.0 - s.s_acctbal / 10000.0)            AS price_score,
-    1.0                                        AS availability_score,
-    CASE WHEN n.n_regionkey = 1 THEN 1.0 ELSE 0.0 END AS region_america,
-    CASE WHEN n.n_regionkey = 2 THEN 1.0 ELSE 0.0 END AS region_europe,
-    (s.s_acctbal / 10000.0)                   AS balance_score
-FROM supplier s
-JOIN nation n ON s.s_nationkey = n.n_nationkey;
+Unlike the files above, the TPC-H database **is committed**: `data/tpch.db` is a
+ready-to-use scale-factor 0.01 instance (100 suppliers, 25 nations, 8000
+partsupp rows) exposing the `SupplierFeatures` view the experiment reads. No
+setup needed — just run the experiment.
+
+The full schema (base tables + the feature-view definitions used for the paper's
+Table 8) is documented in [`tpch_schema.sql`](tpch_schema.sql). To regenerate
+the DB from scratch, generate SF-0.01 tables with the
+[TPC-H dbgen](https://www.tpc.org/tpch/) tool, load `supplier.tbl` /
+`nation.tbl` / `partsupp.tbl`, then:
+```bash
+sqlite3 data/tpch.db < data/tpch_schema.sql
 ```
 
 ---
