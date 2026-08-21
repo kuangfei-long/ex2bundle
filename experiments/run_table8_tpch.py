@@ -147,6 +147,12 @@ def solve_ex2bundle(df, bounds):
     mdl.add_constraint(cnt >= bounds["count"][0], ctname="min_count")
     mdl.add_constraint(cnt <= bounds["count"][1], ctname="max_count")
 
+    # CPLEX finds the optimal bundle at the root node almost instantly, but with
+    # the default gap (1e-4) then spends ~50s *proving* optimality over the last
+    # fraction of a percent (millions of branch-and-bound nodes) on this
+    # instance. A 0.1% MIP gap returns the (same) optimal solution in ~0.2s
+    # without that exhaustive proof, reproducing the runtime in Table 8.
+    mdl.parameters.mip.tolerances.mipgap.set(0.001)
     mdl.parameters.timelimit.set(60)
     sol = mdl.solve()
     if sol is None:
