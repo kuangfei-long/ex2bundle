@@ -161,6 +161,11 @@ def main():
                          f"higher={hi:.1f}%", f"equal={eq:.1f}%", f"lower={lo:.1f}%",
                          f"mean={diffs.mean():+.4f}"))
 
+    # Record the sample size alongside the stats so the numbers stay traceable.
+    out_rows.append(("n_infeasible_instances", len(rows), "", "", ""))
+    for pad in args.bound_pads:
+        out_rows.append((f"n_infeasible_pad{pad}", sum(1 for r in rows if r[0] == pad), "", "", ""))
+
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
     with open(args.out, "w", newline="") as f:
         csv.writer(f).writerows(out_rows)
