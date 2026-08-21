@@ -105,8 +105,10 @@ data, CNN/DailyMail pre-processed articles, shared docs, and the TPC-H database
 python experiments/run_table8_tpch.py --db_path data/tpch.db --runs 5
 ```
 
-Compares Ex2Bundle against Greedy and Random on the TPC-H supplier-selection
-task and reports CSR (constraint satisfaction rate) and objective score.
+Compares Ex2Bundle against Random, Greedy, and Cluster-Greedy (k-means
+clustering in feature space, then greedy pick per cluster; r2.d4 baseline) on
+the TPC-H supplier-selection task, reporting CSR (constraint satisfaction rate)
+and objective score.
 
 ### RQ2 — §5.3 Retrieval-based FTSE performance (SubSumE)
 

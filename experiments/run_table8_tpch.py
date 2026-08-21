@@ -1,11 +1,13 @@
 """
 RQ1: TPC-H supplier-selection benchmark — Table 8.
 
-Compares three methods on the task of selecting a bundle of suppliers that
+Compares four methods on the task of selecting a bundle of suppliers that
 satisfies intent-derived constraints (learned from 3 example bundles):
-  - Random   : uniform random selection of k suppliers
-  - Greedy   : top-k by summed feature score
-  - Ex2Bundle: ILP with bound synthesis + ConflictRefiner relaxation
+  - Random        : uniform random selection of k suppliers
+  - Greedy        : top-k by summed feature score
+  - Cluster-Greedy: cluster suppliers in feature space (k-means), then greedily
+                    pick the best supplier from each cluster (r2.d4 baseline)
+  - Ex2Bundle     : ILP with bound synthesis + ConflictRefiner relaxation
 
 Metrics:
   - CSR (Constraint Satisfaction Rate): fraction of constraints satisfied
@@ -96,6 +98,36 @@ def solve_greedy(df, bounds):
     return df.sort_values("_obj", ascending=False).head(k)
 
 
+def solve_cluster_greedy(df, bounds, seed=0):
+    """r2.d4 baseline: partition suppliers into k clusters in feature space,
+    then greedily pick the highest-scoring supplier from each cluster.
+
+    Unlike the global top-k Greedy, this enforces coverage across the feature
+    space, so a bundle is less likely to collapse onto a single region/balance
+    regime and miss the per-feature min/max bounds.
+    """
+    from sklearn.cluster import KMeans
+
+    k = int(round((bounds["count"][0] + bounds["count"][1]) / 2))
+    k = min(k, len(df))
+    if k <= 0:
+        return df.head(0)
+
+    df = df.copy()
+    df["_obj"] = df[["price_score", "availability_score", "balance_score"]].sum(axis=1)
+
+    # k clusters, one supplier picked per cluster -> exactly k suppliers.
+    km = KMeans(n_clusters=k, n_init=10, random_state=seed)
+    df["_cluster"] = km.fit_predict(df[FEATURES].to_numpy())
+
+    picks = (
+        df.sort_values("_obj", ascending=False)
+          .groupby("_cluster", sort=False)
+          .head(1)
+    )
+    return picks.drop(columns=["_obj", "_cluster"])
+
+
 def solve_ex2bundle(df, bounds):
     mdl = Model(name="Ex2Bundle_TPC_H", log_output=False)
     x = {i: mdl.binary_var(name=f"x_{i}") for i in df.index}
@@ -157,7 +189,7 @@ def main():
     bounds = learn_bounds(df)
     logging.info("Learned bounds: %s", bounds)
 
-    results = {"Random": [], "Greedy": [], "Ex2Bundle": []}
+    results = {"Random": [], "Greedy": [], "Cluster-Greedy": [], "Ex2Bundle": []}
 
     for run in range(1, args.runs + 1):
         logging.info("Run %d / %d", run, args.runs)
@@ -170,22 +202,26 @@ def main():
         csr, obj = evaluate(solve_greedy(df, bounds), bounds)
         results["Greedy"].append([csr, obj, time.time() - t0])
 
+        t0 = time.time()
+        csr, obj = evaluate(solve_cluster_greedy(df, bounds, seed=run), bounds)
+        results["Cluster-Greedy"].append([csr, obj, time.time() - t0])
+
         if CPLEX_OK:
             t0 = time.time()
             sel = solve_ex2bundle(df, bounds)
             csr, obj = evaluate(sel, bounds)
             results["Ex2Bundle"].append([csr, obj, time.time() - t0])
 
-    print("\n" + "=" * 65)
-    print(f"{'Method':<12} | {'CSR':>17} | {'Avg Obj Score':>13} | {'Runtime (s)':>10}")
-    print("-" * 65)
+    print("\n" + "=" * 67)
+    print(f"{'Method':<14} | {'CSR':>17} | {'Avg Obj Score':>13} | {'Runtime (s)':>10}")
+    print("-" * 67)
     for method, data in results.items():
         if data:
             avg_csr = np.mean([d[0] for d in data]) * 100
             avg_obj = np.mean([d[1] for d in data])
             avg_t   = np.mean([d[2] for d in data])
-            print(f"{method:<12} | {avg_csr:>16.1f}% | {avg_obj:>13.2f} | {avg_t:>10.4f}")
-    print("=" * 65)
+            print(f"{method:<14} | {avg_csr:>16.1f}% | {avg_obj:>13.2f} | {avg_t:>10.4f}")
+    print("=" * 67)
 
 
 if __name__ == "__main__":
