@@ -1,0 +1,4 @@
+mode,n,runtime_s,sbert,rouge1,rouge2,rougeL,init_width,relaxed_width,bound_shift,relax_freq,num_relaxed
+symmetric,825,0.4419,0.8554,0.5399,0.3753,0.4118,1.4426,1.4439,0.0125,0.0145,0.0206
+directional,825,0.4438,0.8554,0.5399,0.3753,0.4118,1.4426,1.4433,0.0066,0.0145,0.0206
+feasopt,825,0.4432,0.8553,0.54,0.3753,0.4119,1.4426,1.4429,0.0025,0.0061,0.0133

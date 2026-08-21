@@ -1,6 +1,9 @@
 # Experiment outputs
+# NB: `results/` is deliberately NOT ignored. This is the paper's artifact repo,
+# so the result tables and figures behind the revision claims are tracked and
+# readable without re-running anything (see results/README.md). Only the old
+# pre-migration scratch directory stays ignored.
 experiments/Results/
-results/
 
 # Python
 __pycache__/

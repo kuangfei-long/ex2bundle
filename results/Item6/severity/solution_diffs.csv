@@ -1,0 +1,10 @@
+pair,sol_identical_frac,mean_jaccard,mean_obj_reldiff,mean_boundshift_diff
+symmetric vs directional,0.9661,0.9877,0.0008,0.1953
+symmetric vs feasopt,0.0621,0.4198,0.0815,1.5349
+directional vs feasopt,0.0621,0.4184,0.0807,1.3396
+directional vs symmetric (signed obj),higher=0.0%,equal=96.6%,lower=3.4%,mean=-0.0145
+feasopt vs symmetric (signed obj),higher=22.6%,equal=6.2%,lower=71.2%,mean=-0.9447
+n_infeasible_instances,177,,,
+n_infeasible_pad-0.2,14,,,
+n_infeasible_pad-0.3,66,,,
+n_infeasible_pad-0.5,97,,,

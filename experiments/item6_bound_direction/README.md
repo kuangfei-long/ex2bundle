@@ -38,12 +38,14 @@ relaxation algorithms.
 
 ## Runs & result layout
 
-The narrative write-up is [`FINDINGS.md`](FINDINGS.md) in this directory
-(tracked). The raw run artifacts (pkl/CSV/PNG) are regenerable and live under
-`results/Item6/`, which is git-ignored:
+The narrative write-up is [`FINDINGS.md`](FINDINGS.md) in this directory. The
+run artifacts (pkl/CSV/PNG) behind it are tracked under `results/Item6/` — see
+[`results/README.md`](../../results/README.md) for a file-by-file index and a
+glossary of the summary-CSV columns — so the numbers can be checked without
+re-running anything:
 
 ```
-results/Item6/           (git-ignored — regenerate with the commands below)
+results/Item6/           (tracked; regenerate with the commands below)
 ├── baseline/            <- 825 queries at the default pad=0.1 (natural infeasibility rate)
 ├── sweep/               <- 250 queries × pads {0.1,-0.2,-0.3} (relaxation-rate curve)
 └── severity/            <- 100 queries × aggressive pads {-0.3..-0.6}; plus runtime & solution benches
