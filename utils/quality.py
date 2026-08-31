@@ -19,7 +19,6 @@ from os.path import join
 
 import numpy as np
 import nltk
-from scipy.spatial.distance import cosine
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.preprocessing import minmax_scale
 
@@ -36,6 +35,16 @@ class Objective_Function_Wrapper:
             self.doc_indicies = json.loads(f.read())
         self.nTopics = nTopics
         self.topic_names = ["topic_" + str(i) for i in range(self.nTopics)]
+        # calculateBSMeritScore/get_ex_embedding both reload a state's
+        # <state>sudocu.npz from disk on every single call otherwise -- a
+        # scan reuses the same handful of states across many
+        # get_predicted_summary calls, so this cache (keyed by npz_path,
+        # mmap'd) turns repeated full-file reads into one load per state.
+        # Same fix as revision/quality.py's _npz_cache, ported here without
+        # that file's non-contiguous-sid ("sids" array) handling, which only
+        # matters for revision/extend_embeddings.py-patched npz files that
+        # models/ex2bundle.py never touches.
+        self._npz_cache = {}
 
     # -- text cleaning ---------------------------------------------------------
     def cleanSentences(self, sentences):
@@ -53,13 +62,21 @@ class Objective_Function_Wrapper:
     # -- BS: SBERT cosine similarity -------------------------------------------
     def calculateBSMeritScore(self, sentence_ids, target_doc, example_embedding):
         npz_path = join(self.shared_docs_path, "StateDocuments/", target_doc + "sudocu.npz")
-        doc_bert_data = np.load(npz_path)['embedding']
+        if npz_path in self._npz_cache:
+            doc_bert_data = self._npz_cache[npz_path]
+        else:
+            doc_bert_data = np.load(npz_path, mmap_mode="r")['embedding']
+            self._npz_cache[npz_path] = doc_bert_data
         state_start = self.doc_indicies[target_doc][0]
-        scores = []
-        for sid in sentence_ids:
-            adj = sid - state_start
-            scores.append(1 - cosine(doc_bert_data[adj], example_embedding))
-        return np.array(scores)
+        rows = doc_bert_data[np.asarray([sid - state_start for sid in sentence_ids])]
+        # Vectorized cosine similarity (1 - cosine distance, matching scipy's
+        # cosine() exactly) against every candidate row at once, instead of a
+        # Python-level loop calling scipy.spatial.distance.cosine() once per
+        # row -- same anti-pattern (and same fix) as revision/filtering.py's
+        # nearest_neighbor_bert_summary_filtering.
+        row_norms = np.linalg.norm(rows, axis=1)
+        ex_norm = np.linalg.norm(example_embedding)
+        return (rows @ example_embedding) / (row_norms * ex_norm)
 
     # -- C-FREQ: TF-IDF --------------------------------------------------------
     def calculateNormalizedTFIDF(self, sentences_target, example_sentences):
@@ -103,18 +120,29 @@ class Objective_Function_Wrapper:
     # -- TS: topic-distribution cosine similarity ------------------------------
     def topicScoresObjective(self, target_topic_scores, example_summaries, df):
         mean_sentences, _, _, _ = self.get_mean_stddev(example_summaries, df)
-        sims = []
-        for ts in np.transpose(target_topic_scores):
-            sims.append(1 - cosine(ts, mean_sentences))
-        return np.array(sims)
+        # Vectorized cosine similarity against every candidate's topic vector
+        # at once, instead of a Python-level loop calling scipy's cosine()
+        # once per candidate -- same fix as calculateBSMeritScore above.
+        mat = np.atleast_2d(np.transpose(target_topic_scores))
+        row_norms = np.linalg.norm(mat, axis=1)
+        mean_norm = np.linalg.norm(mean_sentences)
+        return (mat @ mean_sentences) / (row_norms * mean_norm)
 
     def get_mean_stddev(self, example_summaires, df):
         topic_names = ['topic_' + str(i) for i in range(self.nTopics)]
+        # sid -> row-index lookup + topic matrix built once per call, instead
+        # of df[df["sid"] == sid] (a full linear scan of the whole corpus
+        # DataFrame) once per example sentence -- O(n + k) instead of O(n*k)
+        # for k example sentences.
+        sid_to_row = {sid: i for i, sid in enumerate(df["sid"].to_numpy())}
+        topic_matrix = df[topic_names].to_numpy()
+
         per_sentence, per_example = [], []
         for ex in example_summaires:
             ex_rows = []
             for sid in [int(s) for s in ex["sentence_ids"]]:
-                row = df[df["sid"] == sid][topic_names].to_numpy()
+                row_idx = sid_to_row[sid]
+                row = topic_matrix[row_idx:row_idx + 1]
                 per_sentence.append(row)
                 ex_rows.append(row)
             per_example.append(np.sum(np.array(ex_rows), axis=0))
@@ -131,7 +159,12 @@ class Objective_Function_Wrapper:
         emb = []
         for ex in example_summaires:
             doc = ex['state_name']
-            data = np.load(join(self.shared_docs_path, "StateDocuments/", doc + "sudocu.npz"))['embedding']
+            npz_path = join(self.shared_docs_path, "StateDocuments/", doc + "sudocu.npz")
+            if npz_path in self._npz_cache:
+                data = self._npz_cache[npz_path]
+            else:
+                data = np.load(npz_path, mmap_mode="r")['embedding']
+                self._npz_cache[npz_path] = data
             offset = self.doc_indicies[doc][0]
             for sid in [int(s) for s in ex["sentence_ids"]]:
                 emb.append(data[sid - offset])
