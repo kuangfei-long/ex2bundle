@@ -40,10 +40,6 @@ class Objective_Function_Wrapper:
         # scan reuses the same handful of states across many
         # get_predicted_summary calls, so this cache (keyed by npz_path,
         # mmap'd) turns repeated full-file reads into one load per state.
-        # Same fix as revision/quality.py's _npz_cache, ported here without
-        # that file's non-contiguous-sid ("sids" array) handling, which only
-        # matters for revision/extend_embeddings.py-patched npz files that
-        # models/ex2bundle.py never touches.
         self._npz_cache = {}
 
     # -- text cleaning ---------------------------------------------------------
@@ -72,8 +68,7 @@ class Objective_Function_Wrapper:
         # Vectorized cosine similarity (1 - cosine distance, matching scipy's
         # cosine() exactly) against every candidate row at once, instead of a
         # Python-level loop calling scipy.spatial.distance.cosine() once per
-        # row -- same anti-pattern (and same fix) as revision/filtering.py's
-        # nearest_neighbor_bert_summary_filtering.
+        # row.
         row_norms = np.linalg.norm(rows, axis=1)
         ex_norm = np.linalg.norm(example_embedding)
         return (rows @ example_embedding) / (row_norms * ex_norm)

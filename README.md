@@ -41,6 +41,7 @@ ex2bundle/
 │   ├── evaluation.py                    # ROUGE + SBERT metrics
 │   ├── filtering.py                     # SBERT candidate pre-filter
 │   ├── quality.py                       # 4.2 Quality variants (C-FREQ / BS / P-FREQ / TS / ALL)
+│   ├── sketch_refine.py                 # 4.5 SKETCH-REFINE query evaluation
 │   └── slider.py                        # 4.1.3 Slider math
 ├── experiments/
 │   ├── runner.py                        # FTSE experiment loop
@@ -236,6 +237,7 @@ See `demo/README.md`. Run with `python -m flask_code.app` from
 | 4.1.4 Algorithm 1 | `models/ex2bundle.py:get_predicted_summary` |
 | 4.2 Quality function | `utils/quality.py:Objective_Function_Wrapper` |
 | 4.3 PaQL / ILP | `models/ex2bundle.py` (CPLEX ILP) |
+| 4.5 SKETCH-REFINE scalable retrieval | `utils/sketch_refine.py`, `models/ex2bundle.py` (`do_sketch_refine=True`), `experiments/sketchrefine_scalability/` |
 | 5.1 Datasets | `data/`, `experiments/cnn_dailymail/` |
 | 5.1 Top-k baseline | `models/sbert_baseline.py` |
 | 5.1 SuDocu baseline | `models/sudocu_baseline.py` |
