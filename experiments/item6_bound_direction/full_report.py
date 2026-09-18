@@ -41,6 +41,7 @@ Usage from the CLI
 """
 
 import argparse
+import csv
 import random
 import sys
 import os
@@ -156,6 +157,47 @@ class _FeasoptEx2Bundle(Ex2Bundle):
 
 _MODEL_CLASSES = {"symmetric": Ex2Bundle, "directional": _DirectionalEx2Bundle, "feasopt": _FeasoptEx2Bundle}
 
+_QUALITY_KEYS = ("rouge1_f1", "rouge2_f1", "rougeL_f1", "sbert", "bound_shift", "num_relaxed", "objective")
+
+
+def _mean_stats(recs, keys=_QUALITY_KEYS):
+    """{n, key: mean(key over recs)} for each key, nan when recs is empty."""
+    stats = {"n": len(recs)}
+    for k in keys:
+        stats[k] = float(np.mean([r[k] for r in recs])) if recs else float("nan")
+    return stats
+
+
+def _objective_win_rates(raw_rows, pad, modes, baseline="symmetric", tol=1e-9):
+    """{mode: "wins/n"} -- pairwise vs `baseline` (symmetric): for each
+    instance in this bound_pad cell, a relaxation mode "wins" if its
+    objective strictly exceeds the baseline mode's objective on that same
+    instance; n is the number of instances both that mode and the baseline
+    have a recorded objective for. The baseline mode itself maps to "-"
+    (it isn't compared against itself). Keyed by (intent_idx, target)
+    rather than list position, so it's safe even if a mode dropped an
+    instance the others kept (e.g. a "def_sum" fallback skip)."""
+    by_instance = defaultdict(dict)
+    for r in raw_rows:
+        if r["bound_pad"] == pad and r["mode"] in modes:
+            by_instance[(r["intent_idx"], r["target"])][r["mode"]] = r["objective"]
+
+    wins = {m: 0 for m in modes if m != baseline}
+    totals = {m: 0 for m in modes if m != baseline}
+    for objs in by_instance.values():
+        if baseline not in objs:
+            continue
+        base_v = objs[baseline]
+        for m, v in objs.items():
+            if m == baseline:
+                continue
+            totals[m] += 1
+            if v > base_v + tol:
+                wins[m] += 1
+    result = {m: f"{wins[m]}/{totals[m]}" for m in wins}
+    result[baseline] = "-"
+    return result
+
 
 def _build_instances(udr, num_examples, num_test, limit=None):
     ground_truth, _gt_indices = udr.read_summaries_list()
@@ -195,8 +237,22 @@ def run_full_item6_report(data_path, shared_docs, users_path,
     dict:
       "quality": {bound_pad: {mode: {n, relax_rate, rouge1_f1, rouge2_f1,
                                       rougeL_f1, sbert, bound_shift,
-                                      relax_freq, num_relaxed}}}
+                                      relax_freq, num_relaxed, objective,
+                                      objective_win_rate}}}
+        -- objective_win_rate is "wins/n": for directional/feasopt, wins is
+        the count of instances (out of n, this bound_pad's instance count)
+        where that mode's objective strictly beat symmetric's on the same
+        instance; symmetric itself is "-" (not compared against itself).
       "runtime": {bound_pad: {mode: {n_infeasible_timed, median_s, mean_s}}}
+      "infeasible": {bound_pad: {mode: {n, rouge1_f1, rouge2_f1, rougeL_f1,
+                                         sbert, bound_shift, num_relaxed, objective}}}
+        -- same quality metrics as "quality", but averaged only over the
+        instances that actually required relaxation (relax_freq > 0).
+      "raw": [ {bound_pad, mode, intent_idx, target, rouge1_f1, rouge2_f1,
+                rougeL_f1, sbert, relax_freq, num_relaxed, bound_shift,
+                objective, learn_time_s, ilp_time_s, clean_median_time_s}, ... ]
+        -- one row per (bound_pad, mode, instance), pre-aggregation. This is
+        exactly what "quality"/"infeasible"/"runtime" are averaged from.
       "n_instances", "bound_pads", "modes"
     """
     for m in modes:
@@ -207,7 +263,8 @@ def run_full_item6_report(data_path, shared_docs, users_path,
     instances = _build_instances(udr, num_examples, num_test, limit)
     scorer = EvaluationScore(shared_docs, data_path, n_topics)
 
-    quality, runtime = {}, {}
+    quality, runtime, infeasible = {}, {}, {}
+    raw_rows = []
 
     for pad in bound_pads:
         models = {m: _MODEL_CLASSES[m](data_path, shared_docs, n_topics, num_examples,
@@ -215,7 +272,6 @@ def run_full_item6_report(data_path, shared_docs, users_path,
                   for m in modes}
 
         per_mode_records = {m: [] for m in modes}
-        per_mode_medians = {m: [] for m in modes}  # one median-over-repeats per infeasible instance
 
         for inst in instances:
             # Same padded bounds handed to all 3 modes for this instance, so the
@@ -225,10 +281,13 @@ def run_full_item6_report(data_path, shared_docs, users_path,
 
             for m in modes:
                 try:
-                    pred, _learn_t, _ilp_t, _slen, relax_freq, num_relaxed = \
+                    pred, learn_t, ilp_t, _slen, relax_freq, num_relaxed = \
                         models[m].get_predicted_summary(inst["target"], inst["example_set"],
                                                           bounds=base_bounds.copy())
-                except Exception:
+                except Exception as e:
+                    import traceback
+                    print(f"[{m}] instance {inst['intent_idx']} failed: {e!r} filename={getattr(e, 'filename', None)}")
+                    traceback.print_exc()
                     continue
                 if pred.startswith("def_sum"):
                     continue
@@ -236,12 +295,9 @@ def run_full_item6_report(data_path, shared_docs, users_path,
                 rouge = scorer.compareScore(pred, inst["gt_text"])          # [[p,r,f1,f2] x3]
                 sbert = scorer.compare_summaries_sbert(pred, inst["gt_text"])
                 bound_shift = float(np.sum(np.abs(models[m].utilized_bounds - base_bounds)))
-                per_mode_records[m].append({
-                    "rouge1_f1": rouge[0][2], "rouge2_f1": rouge[1][2], "rougeL_f1": rouge[2][2],
-                    "sbert": sbert, "relax_freq": relax_freq, "num_relaxed": num_relaxed,
-                    "bound_shift": bound_shift,
-                })
+                objective = float(models[m].last_objective_value)
 
+                clean_median_s = float("nan")
                 if relax_freq > 0:
                     # Clean back-to-back timing (bench_runtime.py's method), median of `repeats`.
                     times = []
@@ -250,24 +306,38 @@ def run_full_item6_report(data_path, shared_docs, users_path,
                         models[m].get_predicted_summary(inst["target"], inst["example_set"],
                                                           bounds=base_bounds.copy())
                         times.append(time.perf_counter() - t0)
-                    per_mode_medians[m].append(float(np.median(times)))
+                    clean_median_s = float(np.median(times))
 
-        quality[pad], runtime[pad] = {}, {}
+                record = {
+                    "rouge1_f1": rouge[0][2], "rouge2_f1": rouge[1][2], "rougeL_f1": rouge[2][2],
+                    "sbert": sbert, "relax_freq": relax_freq, "num_relaxed": num_relaxed,
+                    "bound_shift": bound_shift, "objective": objective,
+                }
+                per_mode_records[m].append(record)
+
+                raw_rows.append({
+                    "bound_pad": pad, "mode": m,
+                    "intent_idx": inst["intent_idx"], "target": inst["target"],
+                    **record,
+                    "learn_time_s": learn_t, "ilp_time_s": ilp_t,
+                    "clean_median_time_s": clean_median_s,
+                })
+
+        objective_wins = _objective_win_rates(raw_rows, pad, modes)
+
+        quality[pad], runtime[pad], infeasible[pad] = {}, {}, {}
         for m in modes:
             recs = per_mode_records[m]
             n = len(recs)
             quality[pad][m] = {
-                "n": n,
                 "relax_rate": (sum(1 for r in recs if r["relax_freq"] > 0) / n) if n else float("nan"),
-                "rouge1_f1":  float(np.mean([r["rouge1_f1"] for r in recs])) if recs else float("nan"),
-                "rouge2_f1":  float(np.mean([r["rouge2_f1"] for r in recs])) if recs else float("nan"),
-                "rougeL_f1":  float(np.mean([r["rougeL_f1"] for r in recs])) if recs else float("nan"),
-                "sbert":      float(np.mean([r["sbert"] for r in recs])) if recs else float("nan"),
-                "bound_shift": float(np.mean([r["bound_shift"] for r in recs])) if recs else float("nan"),
                 "relax_freq": float(np.mean([r["relax_freq"] for r in recs])) if recs else float("nan"),
-                "num_relaxed": float(np.mean([r["num_relaxed"] for r in recs])) if recs else float("nan"),
+                **_mean_stats(recs),
+                "objective_win_rate": objective_wins[m],
             }
-            medians = per_mode_medians[m]
+            infeasible[pad][m] = _mean_stats([r for r in recs if r["relax_freq"] > 0])
+            medians = [r["clean_median_time_s"] for r in raw_rows
+                       if r["bound_pad"] == pad and r["mode"] == m and r["relax_freq"] > 0]
             runtime[pad][m] = {
                 "n_infeasible_timed": len(medians),
                 "median_s": float(np.median(medians)) if medians else float("nan"),
@@ -275,9 +345,54 @@ def run_full_item6_report(data_path, shared_docs, users_path,
             }
 
     return {
-        "quality": quality, "runtime": runtime,
+        "quality": quality, "runtime": runtime, "infeasible": infeasible, "raw": raw_rows,
         "n_instances": len(instances), "bound_pads": list(bound_pads), "modes": list(modes),
     }
+
+
+_RAW_FIELDS = ("bound_pad", "mode", "intent_idx", "target", "rouge1_f1", "rouge2_f1",
+               "rougeL_f1", "sbert", "relax_freq", "num_relaxed", "bound_shift", "objective",
+               "learn_time_s", "ilp_time_s", "clean_median_time_s")
+
+_SUMMARY_FIELDS = ("bound_pad", "mode", "n", "relax_rate", "relax_freq",
+                    "rouge1_f1", "rouge2_f1", "rougeL_f1", "sbert",
+                    "bound_shift", "num_relaxed", "objective", "objective_win_rate",
+                    "n_infeasible_timed", "median_clean_time_s", "mean_clean_time_s")
+
+
+def write_raw_csv(report, path):
+    """One row per (bound_pad, mode, instance) -- everything before averaging."""
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=_RAW_FIELDS)
+        w.writeheader()
+        w.writerows(report["raw"])
+
+
+def write_summary_csv(report, path):
+    """One row per (bound_pad, mode): every metric discussed -- runtime,
+    #constraints relaxed, total bound-relaxation amount, objective score,
+    and ROUGE/SBERT -- averaged over ALL instances for that cell (the
+    clean-timing columns remain infeasible-only, since that's the only
+    subset they're ever measured on)."""
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=_SUMMARY_FIELDS)
+        w.writeheader()
+        for pad in report["bound_pads"]:
+            for m in report["modes"]:
+                q = report["quality"][pad][m]
+                rt = report["runtime"][pad][m]
+                w.writerow({
+                    "bound_pad": pad, "mode": m, "n": q["n"],
+                    "relax_rate": q["relax_rate"], "relax_freq": q["relax_freq"],
+                    "rouge1_f1": q["rouge1_f1"], "rouge2_f1": q["rouge2_f1"],
+                    "rougeL_f1": q["rougeL_f1"], "sbert": q["sbert"],
+                    "bound_shift": q["bound_shift"], "num_relaxed": q["num_relaxed"],
+                    "objective": q["objective"], "objective_win_rate": q["objective_win_rate"],
+                    "n_infeasible_timed": rt["n_infeasible_timed"],
+                    "median_clean_time_s": rt["median_s"], "mean_clean_time_s": rt["mean_s"],
+                })
 
 
 def print_full_item6_report(report):
@@ -303,7 +418,10 @@ def print_full_item6_report(report):
         print()
 
     _print("Quality / relaxation (mean over all instances)", report["quality"],
-            ["n", "relax_rate", "rouge1_f1", "sbert", "bound_shift", "num_relaxed"])
+            ["n", "relax_rate", "rouge1_f1", "sbert", "bound_shift", "num_relaxed",
+             "objective", "objective_win_rate"])
+    _print("Quality, infeasible instances only (mean over relaxed instances)", report["infeasible"],
+            ["n", "rouge1_f1", "rouge2_f1", "rougeL_f1", "sbert", "bound_shift", "num_relaxed", "objective"])
     _print("Clean runtime, infeasible instances only (median of repeats)", report["runtime"],
             ["n_infeasible_timed", "median_s", "mean_s"])
 
@@ -321,7 +439,17 @@ def main():
     ap.add_argument("--limit", type=int, default=15)
     ap.add_argument("--repeats", type=int, default=2)
     ap.add_argument("--seed", type=int, default=7891)
+    ap.add_argument("--output_file", default="results/Item6/full_report/full_report",
+                     help="Path prefix (directory + basename, no extension) for the two "
+                          "output CSVs: <output_file>_raw.csv (per-instance rows, before "
+                          "any averaging) and <output_file>_summary.csv (per-(bound_pad, "
+                          "mode) averages: runtime, num_relaxed, bound_shift, objective, "
+                          "rouge/sbert). Pass a different prefix per run to avoid "
+                          "overwriting a previous run's output.")
     args = ap.parse_args()
+
+    raw_out = f"{args.output_file}_raw.csv"
+    summary_out = f"{args.output_file}_summary.csv"
 
     report = run_full_item6_report(
         args.data_path, args.shared_docs, args.users_path,
@@ -330,6 +458,11 @@ def main():
         limit=args.limit, repeats=args.repeats, seed=args.seed,
     )
     print_full_item6_report(report)
+
+    write_raw_csv(report, raw_out)
+    write_summary_csv(report, summary_out)
+    print(f"Wrote raw per-instance rows to {raw_out}")
+    print(f"Wrote per-(bound_pad, mode) averages to {summary_out}")
 
 
 if __name__ == "__main__":
