@@ -2,11 +2,6 @@
 One-shot Item-6 report: quality/relaxation metrics + clean runtime, per
 (bound_pad, mode), in a single pass over a single set of instances.
 
-models/ex2bundle.py no longer has relaxation_mode/bound_pad (that support was
-removed by the Section-4.5 Sketch-Refine refactor and is intentionally NOT
-being re-added there). This module gets the three Item-6 relaxation
-strategies back WITHOUT touching models/ex2bundle.py, by:
-
   - bound_pad: Ex2Bundle.get_predicted_summary(bounds=...) already accepts a
     pre-computed bounds array; SuDocuBase.get_bounds(bound_pad=...) (which
     Ex2Bundle inherits unchanged) still supports the pad. So pads are swept
