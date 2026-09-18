@@ -2,15 +2,13 @@
 One-shot Item-6 report: quality/relaxation metrics + clean runtime, per
 (bound_pad, mode), in a single pass over a single set of instances.
 
-  - bound_pad: Ex2Bundle.get_predicted_summary(bounds=...) already accepts a
-    pre-computed bounds array; SuDocuBase.get_bounds(bound_pad=...) (which
-    Ex2Bundle inherits unchanged) still supports the pad. So pads are swept
-    here by computing bounds externally and passing them in explicitly.
-  - relaxation_mode: Ex2Bundle's DIRECT solve loop dispatches its relaxation
-    step through two `self.`-resolved hooks, _identify_violated_constraints
-    and _relax_violated_bounds. Subclassing Ex2Bundle here and overriding
-    just those two hooks reproduces "directional" and "feasopt" without
-    editing the base class at all; "symmetric" is the unmodified base class.
+models/ex2bundle.py dropped relaxation_mode/bound_pad support in the
+Section-4.5 refactor. This module restores the three Item-6 strategies
+without touching that file: bound_pad is applied by computing bounds
+externally via SuDocuBase.get_bounds(bound_pad=...) and passing them in;
+relaxation_mode is applied by subclassing Ex2Bundle and overriding its two
+relaxation hooks (_identify_violated_constraints, _relax_violated_bounds)
+for "directional"/"feasopt" -- "symmetric" is the unmodified base class.
 
 Consolidates what run_bound_direction.py and bench_runtime.py each do
 separately:
@@ -41,6 +39,7 @@ Usage from the CLI
 """
 
 import argparse
+import contextlib
 import csv
 import random
 import sys
@@ -48,8 +47,10 @@ import os
 import time
 import warnings
 from collections import defaultdict
+from unittest.mock import patch
 
 import numpy as np
+import docplex.mp.model as cpx
 from docplex.mp.conflict_refiner import ConflictRefiner
 from docplex.mp.relaxer import Relaxer
 
@@ -63,15 +64,46 @@ from models.ex2bundle import Ex2Bundle
 MODES = ("symmetric", "directional", "feasopt")
 
 
+class _ObjectiveCaptureModel(cpx.Model):
+    """Drop-in for cpx.Model, active only during one get_predicted_summary()
+    call (see _capture_objective). models/ex2bundle.py never exposes the
+    solution object from .solve() -- this subclass records each solve's
+    objective into a shared sink instead of modifying that file.
+
+    _FeasoptEx2Bundle's one-shot shortcut replaces .solve() directly and
+    bypasses this override, so it writes to the sink itself."""
+
+    _sink = None  # {"value": float|None}, set by _capture_objective while active
+
+    def solve(self, *args, **kwargs):
+        sol = super().solve(*args, **kwargs)
+        if sol is not None and _ObjectiveCaptureModel._sink is not None:
+            _ObjectiveCaptureModel._sink["value"] = sol.objective_value
+        return sol
+
+
+@contextlib.contextmanager
+def _capture_objective():
+    """Yields a {"value": float|None} sink holding the objective of the
+    solution get_predicted_summary() ends up returning, captured without
+    touching models/ex2bundle.py (see _ObjectiveCaptureModel)."""
+    sink = {"value": None}
+    _ObjectiveCaptureModel._sink = sink
+    with patch("docplex.mp.model.Model", _ObjectiveCaptureModel):
+        try:
+            yield sink
+        finally:
+            _ObjectiveCaptureModel._sink = None
+
+
 class _DirectionalEx2Bundle(Ex2Bundle):
-    """Same DIRECT solve loop as Ex2Bundle, but widens only the violated
-    SIDE of each flagged topic constraint (base class widens both sides).
-    Overrides only the two relaxation hooks the loop calls by `self.`
-    dispatch -- models/ex2bundle.py is not touched."""
+    """Same solve loop as Ex2Bundle, but widens only the violated SIDE of
+    each flagged topic (base class widens both). Overrides only the two
+    relaxation hooks -- models/ex2bundle.py is untouched."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._sides = {}  # {topic_idx: 'min'|'max'|'both'} for the pending round
+        self._sides = {}  # {topic_idx: set of 'min'/'max' flagged this round}
 
     def _identify_violated_constraints(self, opt_model, bounds, prev_relax_topics):
         relax, sides, round_relaxed = set(), {}, False
@@ -84,7 +116,8 @@ class _DirectionalEx2Bundle(Ex2Bundle):
                         if name.startswith(prefix):
                             j = int(name[len(prefix):])
                             relax.add(j)
-                            sides[j] = side
+                            # Both sides of one topic can be flagged in the same round -- keep both.
+                            sides.setdefault(j, set()).add(side)
                             round_relaxed = True
             except Exception:
                 pass
@@ -95,7 +128,7 @@ class _DirectionalEx2Bundle(Ex2Bundle):
             for i in range(self.nTopics):
                 if np.abs(bound_diffs[i]) < avg_diff:
                     relax.add(i)
-                    sides[i] = "both"
+                    sides[i] = {"min", "max"}
                     round_relaxed = True
         self._sides = sides
         return list(relax), round_relaxed
@@ -103,32 +136,41 @@ class _DirectionalEx2Bundle(Ex2Bundle):
     def _relax_violated_bounds(self, model, bounds, step_sizes, relax_topics, solv_ctr, step_mult):
         for j in range(self.nTopics):
             if (j in np.array(relax_topics)) and solv_ctr > 0:
-                side = self._sides.get(j, "both")
-                if side in ("min", "both"):
+                sides = self._sides.get(j, {"min", "max"})
+                if "min" in sides:
                     lb_new = bounds[j][0] - step_mult * step_sizes[j]
                     bounds[j][0] = lb_new if lb_new > 0 else 0.0
-                if side in ("max", "both"):
+                if "max" in sides:
                     bounds[j][1] = bounds[j][1] + step_mult * step_sizes[j]
             model.get_constraint_by_name("constraint_min_topic{0}".format(j)).rhs = bounds[j][0]
             model.get_constraint_by_name("constraint_max_topic{0}".format(j)).rhs = bounds[j][1]
 
 
 class _FeasoptEx2Bundle(Ex2Bundle):
-    """Same DIRECT solve loop as Ex2Bundle, but on the first infeasible
-    round relaxes ALL violated constraints at once by CPLEX FeasOpt's
-    minimal-total-slack amounts (base class widens step-by-step,
-    iteratively). Overrides only the two relaxation hooks -- models/
-    ex2bundle.py is not touched."""
+    """Same solve loop as Ex2Bundle, but the first infeasible round is
+    resolved by one CPLEX FeasOpt call (Relaxer's OptSum mode already
+    re-optimizes the real objective under its minimal relaxation), and that
+    solution is used directly -- matching the original one-shot design.
+    _relax_violated_bounds shortcuts the loop's next solve() to hand back
+    that cached solution instead of a redundant resolve. Overrides only the
+    two relaxation hooks -- models/ex2bundle.py is untouched."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._deltas = {}  # {(topic_idx, 'min'|'max'): signed_rhs_delta}
+        self._deltas = {}          # {(topic_idx, 'min'|'max'): signed_rhs_delta}
+        self._relaxed_solution = None  # Relaxer's own solution, pending hand-off
 
     def _identify_violated_constraints(self, opt_model, bounds, prev_relax_topics):
+        # self is the only channel to _relax_violated_bounds -- clear stale
+        # state up front so a prior instance's unconsumed solution can't leak in.
+        self._deltas = {}
+        self._relaxed_solution = None
         try:
             relaxer = Relaxer()
-            relaxer.relax(opt_model)
+            relaxed_sol = relaxer.relax(opt_model)
         except Exception:
+            return list(prev_relax_topics), False
+        if relaxed_sol is None:
             return list(prev_relax_topics), False
 
         deltas = {}
@@ -140,6 +182,7 @@ class _FeasoptEx2Bundle(Ex2Bundle):
                 if name.startswith(prefix):
                     deltas[(int(name[len(prefix):]), side)] = amount
         self._deltas = deltas
+        self._relaxed_solution = relaxed_sol
         return sorted({j for (j, _side) in deltas}), bool(deltas)
 
     def _relax_violated_bounds(self, model, bounds, step_sizes, relax_topics, solv_ctr, step_mult):
@@ -153,6 +196,14 @@ class _FeasoptEx2Bundle(Ex2Bundle):
         for j in range(self.nTopics):
             model.get_constraint_by_name("constraint_min_topic{0}".format(j)).rhs = bounds[j][0]
             model.get_constraint_by_name("constraint_max_topic{0}".format(j)).rhs = bounds[j][1]
+
+        if self._relaxed_solution is not None:
+            cached_solution = self._relaxed_solution
+            self._relaxed_solution = None
+            model.solve = lambda *_a, **_kw: cached_solution
+            # Bypasses _ObjectiveCaptureModel.solve()'s override -- record here instead.
+            if _ObjectiveCaptureModel._sink is not None:
+                _ObjectiveCaptureModel._sink["value"] = cached_solution.objective_value
 
 
 _MODEL_CLASSES = {"symmetric": Ex2Bundle, "directional": _DirectionalEx2Bundle, "feasopt": _FeasoptEx2Bundle}
@@ -168,34 +219,88 @@ def _mean_stats(recs, keys=_QUALITY_KEYS):
     return stats
 
 
-def _objective_win_rates(raw_rows, pad, modes, baseline="symmetric", tol=1e-9):
-    """{mode: "wins/n"} -- pairwise vs `baseline` (symmetric): for each
-    instance in this bound_pad cell, a relaxation mode "wins" if its
-    objective strictly exceeds the baseline mode's objective on that same
-    instance; n is the number of instances both that mode and the baseline
-    have a recorded objective for. The baseline mode itself maps to "-"
-    (it isn't compared against itself). Keyed by (intent_idx, target)
+_PAIRWISE_PLACEHOLDER = {
+    "n_infeasible_paired": "-",
+    "objective_win_rate": "-", "objective_tie_rate": "-", "objective_avg_diff": float("nan"),
+    "runtime_win_rate": "-", "runtime_tie_rate": "-",
+    "runtime_avg_diff": float("nan"), "runtime_median_diff": float("nan"),
+}
+
+
+def _pairwise_vs_baseline(raw_rows, pad, modes, baseline="symmetric", tol=1e-6):
+    """Pairwise directional-vs-symmetric / feasopt-vs-symmetric comparison
+    for this bound_pad, restricted to queries that actually required
+    relaxation under BOTH sides (relax_freq > 0 for the baseline AND for
+    the compared mode on that same instance) -- the two modes only
+    diverge once relaxation kicks in, and clean_median_time_s is only
+    ever measured on that infeasible subset to begin with, so anything
+    still feasible outright is dropped from every stat below.
+
+    Objective is "higher is better" (win = strictly beats baseline);
+    runtime is "lower is better" (win = strictly faster than baseline).
+    Ties use `tol` on the raw difference. Keyed by (intent_idx, target)
     rather than list position, so it's safe even if a mode dropped an
-    instance the others kept (e.g. a "def_sum" fallback skip)."""
+    instance the others kept (e.g. a "def_sum" fallback skip).
+
+    Returns {mode: {n_infeasible_paired, objective_win_rate, objective_tie_rate,
+                     objective_avg_diff, runtime_win_rate, runtime_tie_rate,
+                     runtime_avg_diff, runtime_median_diff}} for every mode in
+    `modes`; the baseline mode itself maps to _PAIRWISE_PLACEHOLDER (not
+    compared against itself)."""
     by_instance = defaultdict(dict)
     for r in raw_rows:
         if r["bound_pad"] == pad and r["mode"] in modes:
-            by_instance[(r["intent_idx"], r["target"])][r["mode"]] = r["objective"]
+            by_instance[(r["intent_idx"], r["target"])][r["mode"]] = r
 
-    wins = {m: 0 for m in modes if m != baseline}
-    totals = {m: 0 for m in modes if m != baseline}
-    for objs in by_instance.values():
-        if baseline not in objs:
+    others = [m for m in modes if m != baseline]
+    obj_win = {m: 0 for m in others}
+    obj_tie = {m: 0 for m in others}
+    obj_diffs = {m: [] for m in others}
+    rt_win = {m: 0 for m in others}
+    rt_tie = {m: 0 for m in others}
+    rt_diffs = {m: [] for m in others}
+    n_paired = {m: 0 for m in others}
+
+    for recs in by_instance.values():
+        base_r = recs.get(baseline)
+        if base_r is None or base_r["relax_freq"] <= 0:
             continue
-        base_v = objs[baseline]
-        for m, v in objs.items():
-            if m == baseline:
+        for m in others:
+            r = recs.get(m)
+            if r is None or r["relax_freq"] <= 0:
                 continue
-            totals[m] += 1
-            if v > base_v + tol:
-                wins[m] += 1
-    result = {m: f"{wins[m]}/{totals[m]}" for m in wins}
-    result[baseline] = "-"
+            n_paired[m] += 1
+
+            d_obj = r["objective"] - base_r["objective"]
+            obj_diffs[m].append(d_obj)
+            if d_obj > tol:
+                obj_win[m] += 1
+            elif abs(d_obj) <= tol:
+                obj_tie[m] += 1
+
+            d_rt = r["clean_median_time_s"] - base_r["clean_median_time_s"]
+            rt_diffs[m].append(d_rt)
+            if d_rt < -tol:
+                rt_win[m] += 1
+            elif abs(d_rt) <= tol:
+                rt_tie[m] += 1
+
+    result = {baseline: dict(_PAIRWISE_PLACEHOLDER)}
+    for m in others:
+        n = n_paired[m]
+        if n == 0:
+            result[m] = {**_PAIRWISE_PLACEHOLDER, "n_infeasible_paired": 0}
+            continue
+        result[m] = {
+            "n_infeasible_paired": n,
+            "objective_win_rate": f"{obj_win[m]}/{n}",
+            "objective_tie_rate": f"{obj_tie[m]}/{n}",
+            "objective_avg_diff": float(np.mean(obj_diffs[m])),
+            "runtime_win_rate": f"{rt_win[m]}/{n}",
+            "runtime_tie_rate": f"{rt_tie[m]}/{n}",
+            "runtime_avg_diff": float(np.mean(rt_diffs[m])),
+            "runtime_median_diff": float(np.median(rt_diffs[m])),
+        }
     return result
 
 
@@ -238,11 +343,19 @@ def run_full_item6_report(data_path, shared_docs, users_path,
       "quality": {bound_pad: {mode: {n, relax_rate, rouge1_f1, rouge2_f1,
                                       rougeL_f1, sbert, bound_shift,
                                       relax_freq, num_relaxed, objective,
-                                      objective_win_rate}}}
-        -- objective_win_rate is "wins/n": for directional/feasopt, wins is
-        the count of instances (out of n, this bound_pad's instance count)
-        where that mode's objective strictly beat symmetric's on the same
-        instance; symmetric itself is "-" (not compared against itself).
+                                      n_infeasible_paired,
+                                      objective_win_rate, objective_tie_rate, objective_avg_diff,
+                                      runtime_win_rate, runtime_tie_rate,
+                                      runtime_avg_diff, runtime_median_diff}}}
+        -- the objective_*/runtime_* fields are directional-vs-symmetric and
+        feasopt-vs-symmetric pairwise comparisons (symmetric itself is "-"/
+        nan, not compared against itself), restricted to queries that
+        needed relaxation under BOTH sides (see _pairwise_vs_baseline).
+        objective_win_rate/objective_tie_rate are "k/n" (higher objective
+        wins); objective_avg_diff is mean(mode - symmetric). runtime_win_rate/
+        runtime_tie_rate are "k/n" (lower clean_median_time_s wins);
+        runtime_avg_diff/runtime_median_diff are mean/median(mode - symmetric),
+        so negative means faster than symmetric.
       "runtime": {bound_pad: {mode: {n_infeasible_timed, median_s, mean_s}}}
       "infeasible": {bound_pad: {mode: {n, rouge1_f1, rouge2_f1, rougeL_f1,
                                          sbert, bound_shift, num_relaxed, objective}}}
@@ -281,9 +394,10 @@ def run_full_item6_report(data_path, shared_docs, users_path,
 
             for m in modes:
                 try:
-                    pred, learn_t, ilp_t, _slen, relax_freq, num_relaxed = \
-                        models[m].get_predicted_summary(inst["target"], inst["example_set"],
-                                                          bounds=base_bounds.copy())
+                    with _capture_objective() as captured:
+                        pred, learn_t, ilp_t, _slen, relax_freq, num_relaxed = \
+                            models[m].get_predicted_summary(inst["target"], inst["example_set"],
+                                                              bounds=base_bounds.copy())
                 except Exception as e:
                     import traceback
                     print(f"[{m}] instance {inst['intent_idx']} failed: {e!r} filename={getattr(e, 'filename', None)}")
@@ -295,7 +409,7 @@ def run_full_item6_report(data_path, shared_docs, users_path,
                 rouge = scorer.compareScore(pred, inst["gt_text"])          # [[p,r,f1,f2] x3]
                 sbert = scorer.compare_summaries_sbert(pred, inst["gt_text"])
                 bound_shift = float(np.sum(np.abs(models[m].utilized_bounds - base_bounds)))
-                objective = float(models[m].last_objective_value)
+                objective = float(captured["value"]) if captured["value"] is not None else float("nan")
 
                 clean_median_s = float("nan")
                 if relax_freq > 0:
@@ -323,7 +437,7 @@ def run_full_item6_report(data_path, shared_docs, users_path,
                     "clean_median_time_s": clean_median_s,
                 })
 
-        objective_wins = _objective_win_rates(raw_rows, pad, modes)
+        pairwise = _pairwise_vs_baseline(raw_rows, pad, modes)
 
         quality[pad], runtime[pad], infeasible[pad] = {}, {}, {}
         for m in modes:
@@ -333,7 +447,7 @@ def run_full_item6_report(data_path, shared_docs, users_path,
                 "relax_rate": (sum(1 for r in recs if r["relax_freq"] > 0) / n) if n else float("nan"),
                 "relax_freq": float(np.mean([r["relax_freq"] for r in recs])) if recs else float("nan"),
                 **_mean_stats(recs),
-                "objective_win_rate": objective_wins[m],
+                **pairwise[m],
             }
             infeasible[pad][m] = _mean_stats([r for r in recs if r["relax_freq"] > 0])
             medians = [r["clean_median_time_s"] for r in raw_rows
@@ -356,8 +470,12 @@ _RAW_FIELDS = ("bound_pad", "mode", "intent_idx", "target", "rouge1_f1", "rouge2
 
 _SUMMARY_FIELDS = ("bound_pad", "mode", "n", "relax_rate", "relax_freq",
                     "rouge1_f1", "rouge2_f1", "rougeL_f1", "sbert",
-                    "bound_shift", "num_relaxed", "objective", "objective_win_rate",
-                    "n_infeasible_timed", "median_clean_time_s", "mean_clean_time_s")
+                    "bound_shift", "num_relaxed", "objective",
+                    "n_infeasible_timed", "median_clean_time_s", "mean_clean_time_s",
+                    "n_infeasible_paired",
+                    "objective_win_rate", "objective_tie_rate", "objective_avg_diff",
+                    "runtime_win_rate", "runtime_tie_rate",
+                    "runtime_avg_diff", "runtime_median_diff")
 
 
 def write_raw_csv(report, path):
@@ -389,9 +507,17 @@ def write_summary_csv(report, path):
                     "rouge1_f1": q["rouge1_f1"], "rouge2_f1": q["rouge2_f1"],
                     "rougeL_f1": q["rougeL_f1"], "sbert": q["sbert"],
                     "bound_shift": q["bound_shift"], "num_relaxed": q["num_relaxed"],
-                    "objective": q["objective"], "objective_win_rate": q["objective_win_rate"],
+                    "objective": q["objective"],
                     "n_infeasible_timed": rt["n_infeasible_timed"],
                     "median_clean_time_s": rt["median_s"], "mean_clean_time_s": rt["mean_s"],
+                    "n_infeasible_paired": q["n_infeasible_paired"],
+                    "objective_win_rate": q["objective_win_rate"],
+                    "objective_tie_rate": q["objective_tie_rate"],
+                    "objective_avg_diff": q["objective_avg_diff"],
+                    "runtime_win_rate": q["runtime_win_rate"],
+                    "runtime_tie_rate": q["runtime_tie_rate"],
+                    "runtime_avg_diff": q["runtime_avg_diff"],
+                    "runtime_median_diff": q["runtime_median_diff"],
                 })
 
 
@@ -418,8 +544,10 @@ def print_full_item6_report(report):
         print()
 
     _print("Quality / relaxation (mean over all instances)", report["quality"],
-            ["n", "relax_rate", "rouge1_f1", "sbert", "bound_shift", "num_relaxed",
-             "objective", "objective_win_rate"])
+            ["n", "relax_rate", "rouge1_f1", "sbert", "bound_shift", "num_relaxed", "objective"])
+    _print("Pairwise vs symmetric (paired-infeasible queries only)", report["quality"],
+            ["n_infeasible_paired", "objective_win_rate", "objective_tie_rate", "objective_avg_diff",
+             "runtime_win_rate", "runtime_tie_rate", "runtime_avg_diff", "runtime_median_diff"])
     _print("Quality, infeasible instances only (mean over relaxed instances)", report["infeasible"],
             ["n", "rouge1_f1", "rouge2_f1", "rougeL_f1", "sbert", "bound_shift", "num_relaxed", "objective"])
     _print("Clean runtime, infeasible instances only (median of repeats)", report["runtime"],
